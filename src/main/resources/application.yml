@@ -1,0 +1,18 @@
+spring:
+  jpa:
+    show-sql: true
+    defer-datasource-initialization: true
+    hibernate:
+      ddl-auto: create
+  datasource:
+    url: jdbc:mysql://localhost/car_price_pro?useSSL=false&allowPublicKeyRetrieval=true
+    username: caruser
+    password: carpass
+#    url: jdbc: mysql://db_container/daily_report_system?useSSL=false&allowPublicKeyRetrieval=true
+#    username: repuser
+#    password: reppass
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  sql:
+    init:
+      mode: always
+      encoding: UTF-8
