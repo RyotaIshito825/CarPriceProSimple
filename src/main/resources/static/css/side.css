@@ -68,6 +68,26 @@ a {
   font-family: Impact;
 }
 
+.contents {
+  display: flex;
+}
+
+.content-mains {
+  margin-left: 30px;
+  padding: 30px 20px 20px 20px;
+}
+
+.page_title {
+  font-size: 30px;
+  font-weight: bold;
+}
+
+.japanese_calendar,
+.registration_year,
+.registration_month {
+  font-family: Impact;
+}
+
 .side {
   background-image: linear-gradient(135deg, #52E5E7 10%, #130CB7 100%);
   width: 200px;

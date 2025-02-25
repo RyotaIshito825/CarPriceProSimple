@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html class="h-100" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="common/header :: head_fragment(title = 'プロフィール情報')">
+
+<body class="">
+
+    <div class="contents">
+        <!-- サイドバー -->
+        <div th:replace="common/side_bar :: side_bar"></div>
+
+        <!-- メイン -->
+        <div class="content-mains">
+            <div class="content-mains_inner">
+                <div class="page_title">プロフィール情報</div>
+
+                <div class="profiles">
+                    <div class="profile_images">
+                        <div class="profile_images_inner">
+                            <img th:src="@{/img/icons/human-icon-white.png}" alt="" class="profile_image">
+                        </div>
+                    </div>
+                    <div class="profile_tables">
+                        <div class="profile_tables-tr">
+                            <div class="profile_tables-th">ID</div>
+                            <div class="profile_tables-td">1</div>
+                        </div>
+                        <div class="profile_tables-tr">
+                            <div class="profile_tables-th">名前</div>
+                            <div class="profile_tables-td">クルマ 太郎</div>
+                        </div>
+                        <div class="profile_tables-tr">
+                            <div class="profile_tables-th">職種</div>
+                            <div class="profile_tables-td">営業</div>
+                        </div>
+                        <div class="profile_tables-tr">
+                            <div class="profile_tables-th">メールアドレス</div>
+                            <div class="profile_tables-td">car-taro@example.com</div>
+                        </div>
+                        <div class="profile_tables-tr">
+                            <div class="profile_tables-th">chatwork ID</div>
+                            <div class="profile_tables-td">car-taro-chatwork</div>
+                        </div>
+                        <div class="profile_edit-btns">
+                            <a href="" class="profile_edit-btn">編集</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
