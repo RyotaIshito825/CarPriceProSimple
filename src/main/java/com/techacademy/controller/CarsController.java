@@ -2,15 +2,68 @@ package com.techacademy.controller;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
 @RequestMapping("cars")
 public class CarsController {
 
+    // 車両一覧画面表示
     @GetMapping
-    public String list() {
-        return "";
+    public String top() {
+        return "cars/list";
+    }
+
+    // 車両詳細画面表示
+    @GetMapping(value = "/{id}")
+    public String detail() {
+        return "cars/detail";
+    }
+
+    // 車両新規登録
+    @GetMapping(value = "/add")
+    public String create() {
+        return "cars/create";
+    }
+    // 車両新規登録処理
+    @PostMapping(value = "/add")
+    public String add() {
+        return "redirect:/cars";
+    }
+
+    // 車両更新画面表示
+    @GetMapping(value = "/{id}/update")
+    public String edit() {
+        return "cars/eidt";
+    }
+    // 車両更新処理
+    @PostMapping(value = "/{id}/update")
+    public String update() {
+        return "redirect:/cars";
+    }
+
+    // 車両削除処理
+    @PostMapping(value = "/delete")
+    public String delete() {
+        return "redirect:/cars";
+    }
+
+    // データ取込画面表示
+    @GetMapping(value = "/intake")
+    public String intake() {
+        return "cars/intake";
+    }
+    // データ取込処理
+    @PostMapping(value = "/intake")
+    public String regi() {
+        return "redirect:/cars";
+    }
+
+    // テンプレート一覧画面表示
+    @GetMapping(value = "/template")
+    public String template() {
+        return "cars/template";
     }
 
 }

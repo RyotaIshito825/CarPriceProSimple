@@ -1,0 +1,81 @@
+.content-mains_inner {
+  position: relative;
+}
+
+.templates-selected-pricecards {
+  top: 20px;
+  right: 0;
+  position: absolute;
+  display: flex;
+  align-items: center;
+  margin-left: auto;
+}
+
+.templates-selected-pricecard-wrapper {
+  margin-top: -28px;
+  padding-bottom: 5px;
+  border-bottom: 1px solid skyblue;
+  width: 180px;
+}
+
+.templates-selected-pricecard-label {
+  font-size: 12px;
+}
+
+.templates-selected-pricecard {
+  font-weight: bold;
+  margin-top: 0px;
+}
+
+.templates-pdf-creates {
+  margin-left: 20px;
+}
+
+.templates-pef-create-input {
+  padding: 10px 25px;
+  background-color: #0097b2;
+  border: none;
+  box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
+  border-radius: 3px;
+  color: white;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+.templates_inner {
+  display: flex;
+  flex-wrap: wrap;
+  margin-top: 50px;
+}
+
+.template_images {
+  position: relative;
+  margin: 10px;
+  width: 170px;
+}
+.template_modal-shadow {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  content: "";
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: black;
+  opacity: 0; /* 最初は見えない */
+  transition: opacity 0.3s ease-in-out; /* 1秒でフェードイン */
+}
+
+.template_image-name {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: white;
+  font-weight: bold;
+  opacity: 0; /* 最初は見えない */
+  transition: opacity 0.3s ease-in-out; /* 1秒でフェードイン */
+  z-index: 100;
+  font-size: 10px;
+  white-space: nowrap;
+}/*# sourceMappingURL=car_template.css.map */
