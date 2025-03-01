@@ -24,7 +24,7 @@ public class CarsController {
     // 車両新規登録
     @GetMapping(value = "/add")
     public String create() {
-        return "cars/create";
+        return "cars/new";
     }
     // 車両新規登録処理
     @PostMapping(value = "/add")
@@ -35,7 +35,7 @@ public class CarsController {
     // 車両更新画面表示
     @GetMapping(value = "/{id}/update")
     public String edit() {
-        return "cars/eidt";
+        return "cars/edit";
     }
     // 車両更新処理
     @PostMapping(value = "/{id}/update")
