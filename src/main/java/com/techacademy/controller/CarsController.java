@@ -1,17 +1,36 @@
 package com.techacademy.controller;
 
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import com.techacademy.entity.Car;
+import com.techacademy.service.CarService;
+
 @Controller
 @RequestMapping("cars")
 public class CarsController {
 
+    private final CarService carService;
+
+    @Autowired
+    public CarsController(CarService carService) {
+        this.carService = carService;
+    }
+
     // 車両一覧画面表示
     @GetMapping
     public String top() {
+
+        List<Car> cars = carService.findAll();
+        for (Car car : cars) {
+            System.out.println(car.getMaker());
+        }
+
         return "cars/list";
     }
 
