@@ -105,6 +105,4 @@ public class Car {
     // 走行距離
     @Column(length = 100, nullable = false)
     private Integer mileage;
-
-
 }

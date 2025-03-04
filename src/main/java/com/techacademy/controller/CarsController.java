@@ -4,7 +4,9 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
@@ -24,19 +26,24 @@ public class CarsController {
 
     // 車両一覧画面表示
     @GetMapping
-    public String top() {
+    public String top(Model model) {
 
         List<Car> cars = carService.findAll();
         for (Car car : cars) {
             System.out.println(car.getMaker());
         }
+        model.addAttribute("carList", cars);
 
         return "cars/list";
     }
 
     // 車両詳細画面表示
     @GetMapping(value = "/{id}")
-    public String detail() {
+    public String detail(@PathVariable Integer id, Model model) {
+
+        Car car = carService.findById(id);
+        model.addAttribute(car);
+
         return "cars/detail";
     }
 
@@ -53,7 +60,9 @@ public class CarsController {
 
     // 車両更新画面表示
     @GetMapping(value = "/{id}/update")
-    public String edit() {
+    public String edit(@PathVariable Integer id, Model model) {
+        Car car = carService.findById(id);
+        model.addAttribute(car);
         return "cars/edit";
     }
     // 車両更新処理

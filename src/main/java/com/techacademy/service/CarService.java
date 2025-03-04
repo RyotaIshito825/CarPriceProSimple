@@ -1,6 +1,7 @@
 package com.techacademy.service;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 
@@ -16,9 +17,17 @@ public class CarService {
         this.carRepository = carRepository;
     }
 
-
     // 車両一覧表示
     public List<Car> findAll() {
         return carRepository.findAll();
+    }
+
+    // 車両1件取得
+    public Car findById(Integer id) {
+        // findByIdで検索
+        Optional<Car> option = carRepository.findById(id);
+        // 取得できなかった場合はnullを返す
+        Car car = option.orElse(null);
+        return car;
     }
 }

@@ -13,75 +13,75 @@
                 <div class="content-mains_inner">
                     <div class="page_title">車両詳細</div>
 
-                    <div class="car_details">
+                    <div class="car_details" th:object="${car}">
                         <div class="car_detail_tables">
                             <div class="car_detail_tables-tr">
                                 <div class="car_detail_tables-th">ID</div>
-                                <div class="car_detail_tables-td">1</div>
+                                <div class="car_detail_tables-td" th:text="*{id}"></div>
                             </div>
                             <div class="car_detail_tables-tr">
                                 <div class="car_detail_tables-th">メーカー</div>
-                                <div class="car_detail_tables-td">トヨタ</div>
+                                <div class="car_detail_tables-td" th:text="*{maker}"></div>
                             </div>
                             <div class="car_detail_tables-tr">
                                 <div class="car_detail_tables-th">車種</div>
-                                <div class="car_detail_tables-td">アルファード</div>
+                                <div class="car_detail_tables-td" th:text="*{carModel}"></div>
                             </div>
                             <div class="car_detail_tables-tr">
                                 <div class="car_detail_tables-th">グレード</div>
-                                <div class="car_detail_tables-td">SZ 10人乗り 4WD</div>
+                                <div class="car_detail_tables-td" th:text="*{grade}"></div>
                             </div>
                             <div class="car_detail_tables-tr">
                                 <div class="car_detail_tables-th">区分</div>
-                                <div class="car_detail_tables-td">新車・未使用車</div>
+                                <div class="car_detail_tables-td" th:text="*{classification}"></div>
                             </div>
                             <div class="car_detail_tables-tr">
                                 <div class="car_detail_tables-th">初度登録</div>
                                 <div class="car_detail_tables-td car_detail_tables-td-first_registrations">
-                                    <div class="car_detail_tables-td-first_jc">R</div>
-                                    <div class="car_detail_tables-td-registration_year">6</div>
+                                    <div class="car_detail_tables-td-first_jc" th:text="*{firstJc.getValue()}"></div>
+                                    <div class="car_detail_tables-td-registration_year" th:text="*{registrationYear}"></div>
                                     <div class="car_detail_tables-td-separator car_detail_tables-td-small">年</div>
-                                    <div class="car_detail_tables-td-registration_month">11</div>
+                                    <div class="car_detail_tables-td-registration_month" th:text="*{registrationMonth}"></div>
                                     <div class="car_detail_tables-td-separator car_detail_tables-td-small">月</div>
                                 </div>
                             </div>
                             <div class="car_detail_tables-tr">
                                 <div class="car_detail_tables-th">車検有無</div>
                                 <div class="car_detail_tables-td car_detail_tables-td-vehicle_inspections">
-                                    <div class="car_detail_tables-td-vi_jc">R</div>
-                                    <div class="car_detail_tables-td-vi_year">9</div>
+                                    <div class="car_detail_tables-td-vi_jc" th:text="*{viJc.getValue()}"></div>
+                                    <div class="car_detail_tables-td-vi_year" th:text="*{viYear}"></div>
                                     <div class="car_detail_tables-td-separator car_detail_tables-td-small">年</div>
-                                    <div class="car_detail_tables-td-vi_month">11</div>
+                                    <div class="car_detail_tables-td-vi_month" th:text="*{viMonth}"></div>
                                     <div class="car_detail_tables-td-separator car_detail_tables-td-small">月</div>
                                 </div>
                             </div>
                             <div class="car_detail_tables-tr">
                                 <div class="car_detail_tables-th">プライス</div>
                                 <div class="car_detail_tables-td car_detail_tables-td-prices">
-                                    <div class="car_detail_tables-td-price">200</div>
+                                    <div class="car_detail_tables-td-price" th:text="*{price}"></div>
                                     <div class="car_detail_tables-td-separator car_detail_tables-td-small">.</div>
-                                    <div class="car_detail_tables-td-price_dpf car_detail_tables-td-small">9</div>
+                                    <div class="car_detail_tables-td-price_dpf car_detail_tables-td-small" th:text="*{priceDpf}"></div>
                                     <div class="car_detail_tables-td-separator car_detail_tables-td-small">万円</div>
                                 </div>
                             </div>
                             <div class="car_detail_tables-tr">
                                 <div class="car_detail_tables-th">総額</div>
                                 <div class="car_detail_tables-td car_detail_tables-td-total_prices">
-                                    <div class="car_detail_tables-td-total_price">220</div>
+                                    <div class="car_detail_tables-td-total_price" th:text="*{totalPrice}"></div>
                                     <div class="car_detail_tables-td-separator car_detail_tables-td-small">.</div>
-                                    <div class="car_detail_tables-td-total_price_dpf car_detail_tables-td-small">9</div>
+                                    <div class="car_detail_tables-td-total_price_dpf car_detail_tables-td-small" th:text="*{totalPriceDpf}"></div>
                                     <div class="car_detail_tables-td-separator car_detail_tables-td-small">万円</div>
                                 </div>
                             </div>
                             <div class="car_detail_tables-tr">
                                 <div class="car_detail_tables-th">走行距離</div>
                                 <div class="car_detail_tables-td car_detail_tables-td-mileages">
-                                    <div class="car_detail_tables-td-mileage">10,000</div>
+                                    <div class="car_detail_tables-td-mileage" th:text="*{mileage}"></div>
                                     <div class="car_detail_tables-td-separator car_detail_tables-td-small">km</div>
                                 </div>
                             </div>
                             <div class="car_detail_edit-btns">
-                                <a href="" class="car_detail_edit-btn">編集</a>
+                                <a th:href="@{/cars/{id}/update(id=${car.id})}" class="car_detail_edit-btn">編集</a>
                             </div>
                         </div>
                     </div>
