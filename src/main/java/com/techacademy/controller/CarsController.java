@@ -5,6 +5,8 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -32,6 +34,7 @@ public class CarsController {
         for (Car car : cars) {
             System.out.println(car.getMaker());
         }
+
         model.addAttribute("carList", cars);
 
         return "cars/list";
@@ -42,7 +45,11 @@ public class CarsController {
     public String detail(@PathVariable Integer id, Model model) {
 
         Car car = carService.findById(id);
-        model.addAttribute(car);
+        boolean viExits = String.valueOf(car.getViYear()) == null ? false : true;
+
+        System.out.println(viExits);
+        model.addAttribute("viExits", viExits);
+        model.addAttribute("car", car);
 
         return "cars/detail";
     }
@@ -62,12 +69,23 @@ public class CarsController {
     @GetMapping(value = "/{id}/update")
     public String edit(@PathVariable Integer id, Model model) {
         Car car = carService.findById(id);
-        model.addAttribute(car);
+        model.addAttribute("car", car);
         return "cars/edit";
     }
     // 車両更新処理
     @PostMapping(value = "/{id}/update")
-    public String update() {
+    public String update(@Validated Car car, BindingResult res, Model model) {
+
+        System.out.println(car.getCarModel());
+
+        if (res.hasErrors()) {
+            model.addAttribute("car", car);
+            return "cars/edit";
+        }
+
+
+
+
         return "redirect:/cars";
     }
 

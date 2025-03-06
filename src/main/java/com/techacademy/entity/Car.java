@@ -66,43 +66,43 @@ public class Car {
     private JapaneseCalendar firstJc;
 
     // 初度登録年
-    @Column(length = 10, nullable = false)
+    @Column(length = 2, nullable = false)
     private Integer registrationYear;
 
     // 初度登録月
-    @Column(length = 10, nullable = false)
+    @Column(length = 2, nullable = false)
     private Integer registrationMonth;
 
     // 車検和暦
-    @Column(columnDefinition="VARCHAR(10)", nullable = false)
+    @Column(columnDefinition="VARCHAR(10)")
     @Enumerated(EnumType.STRING)
     private JapaneseCalendar viJc;
 
     // 車検年
-    @Column(length = 10, nullable = false)
+    @Column(length = 2)
     private Integer viYear;
 
     // 車検月
-    @Column(length = 10, nullable = false)
+    @Column(length = 2)
     private Integer viMonth;
 
     // プライス
-    @Column(length = 20, nullable = false)
+    @Column(length = 4, nullable = false)
     private Integer price;
 
     // プライスの小数点
-    @Column(length = 20, nullable = false)
+    @Column(length = 1, nullable = false)
     private Integer priceDpf;
 
     // 総額金額
-    @Column(length = 20, nullable = false)
+    @Column(length = 4, nullable = false)
     private Integer totalPrice;
 
     // 総額金額の小数点
-    @Column(length = 20, nullable = false)
+    @Column(length = 1, nullable = false)
     private Integer totalPriceDpf;
 
     // 走行距離
-    @Column(length = 100, nullable = false)
+    @Column(length = 6, nullable = false)
     private Integer mileage;
 }

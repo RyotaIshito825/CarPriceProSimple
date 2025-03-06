@@ -13,7 +13,7 @@
                 <div class="content-mains_inner">
                     <div class="page_title">車両情報更新</div>
 
-                    <form action="" method="post" class="car_edits_form">
+                    <form th:action="@{/cars/{id}/update(id=${car.id})}" method="post" class="car_edits_form">
                         <div class="car_edits" th:object="${car}">
                             <div class="car_edits_tables">
                                 <div class="car_edits_tables-tr">
@@ -22,7 +22,7 @@
                                         <div class="car_edits-tables-tr_input-wrapper">
                                             <input type="text" class="car_edits_tables-td car_edits_tables-td-maker" th:field="*{maker}">
                                             <div class="errors">
-                                                <div class="error_message error_message-name">20文字以内で入力してください。</div>
+                                                <div class="error_message error_message-name" th:errors="*{maker}">20文字以内で入力してください。</div>
                                             </div>
                                         </div>
                                     </div>
@@ -87,8 +87,8 @@
                                         <div class="car_edits_tables-th car_edits_tables-th-vehicle_inspections">車検有無</div>
                                         <div class="car_edits-tables-tr_input-wrapper">
                                             <div class="car_edits_tables-td car_edits_tables-th-vehicle_inspections-selects">
-                                                <input type="radio" name="" value="" class="car_edits_tables-th-vehicle_inspections-selects-presence">有
-                                                <input type="radio" name="" value="" class="car_edits_tables-th-vehicle_inspections-selects-absence">無
+                                                <input type="radio" name="radio" th:checked="*{viJc != null}" value="" class="car_edits_tables-th-vehicle_inspections-selects-presence">有
+                                                <input type="radio" name="radio" th:checked="*{viJc == null}" value="" class="car_edits_tables-th-vehicle_inspections-selects-absence">無
                                             </div>
                                             <div class="car_edits-tables-tr_input-wrapper_inner">
                                                 <select name="" id="" class="car_edits_tables-td-vi_jc" th:field="*{viJc}">

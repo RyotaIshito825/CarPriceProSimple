@@ -4,7 +4,9 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import com.techacademy.constants.ErrorKinds;
 import com.techacademy.entity.Car;
 import com.techacademy.repository.CarRepository;
 
@@ -30,4 +32,27 @@ public class CarService {
         Car car = option.orElse(null);
         return car;
     }
+
+    // 車両情報更新
+    @Transactional
+    public ErrorKinds updateCar(Car car) {
+        Car c = findById(car.getId());
+
+        // メーカー桁数チェック
+        if (car.getMaker().length() > 20) {
+            return ErrorKinds.TEXT_RANGECHECK_ERROR;
+        }
+        // 車種桁数チェックエラー
+        if (car.getMaker().length() > 20) {
+            return ErrorKinds.TEXT_RANGECHECK_ERROR;
+        }
+        // グレード桁数チェックエラー
+        if (car.getGrade().length() > 20) {
+            return ErrorKinds.TEXT_RANGECHECK_ERROR;
+        }
+
+        return ErrorKinds.SUCCESS;
+
+    }
+
 }

@@ -33,7 +33,7 @@
                             </div>
                             <div class="car_detail_tables-tr">
                                 <div class="car_detail_tables-th">区分</div>
-                                <div class="car_detail_tables-td" th:text="*{classification}"></div>
+                                <div class="car_detail_tables-td" th:text="*{classification.getValue()}"></div>
                             </div>
                             <div class="car_detail_tables-tr">
                                 <div class="car_detail_tables-th">初度登録</div>
@@ -48,11 +48,13 @@
                             <div class="car_detail_tables-tr">
                                 <div class="car_detail_tables-th">車検有無</div>
                                 <div class="car_detail_tables-td car_detail_tables-td-vehicle_inspections">
-                                    <div class="car_detail_tables-td-vi_jc" th:text="*{viJc.getValue()}"></div>
-                                    <div class="car_detail_tables-td-vi_year" th:text="*{viYear}"></div>
-                                    <div class="car_detail_tables-td-separator car_detail_tables-td-small">年</div>
-                                    <div class="car_detail_tables-td-vi_month" th:text="*{viMonth}"></div>
-                                    <div class="car_detail_tables-td-separator car_detail_tables-td-small">月</div>
+
+                                    <div class="car_detail_tables-td-vi_jc" th:if="*{viJc != null}" th:text="*{viJc.getValue()}"></div>
+                                    <div class="car_detail_tables-td-vi_jc" th:if="*{viJc == null}" th:text="車検2年付き"></div>
+                                    <div class="car_detail_tables-td-vi_year" th:if="*{viYear}" th:text="*{viYear}"></div>
+                                    <div class="car_detail_tables-td-separator car_detail_tables-td-small" th:if="*{viYear}">年</div>
+                                    <div class="car_detail_tables-td-vi_month" th:if="*{viMonth}" th:text="*{viMonth}"></div>
+                                    <div class="car_detail_tables-td-separator car_detail_tables-td-small" th:if="*{viMonth}">月</div>
                                 </div>
                             </div>
                             <div class="car_detail_tables-tr">

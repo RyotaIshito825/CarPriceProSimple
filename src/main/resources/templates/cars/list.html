@@ -90,7 +90,7 @@
                                     <div class="cars_tables-tbody-td cars_tables-tbody-td-maker" th:text="${car.maker}"></div>
                                     <div class="cars_tables-tbody-td cars_tables-tbody-td-car_model" th:text="${car.carModel}"></div>
                                     <div class="cars_tables-tbody-td cars_tables-tbody-td-grade" th:text="${car.grade}"></div>
-                                    <div class="cars_tables-tbody-td cars_tables-tbody-td-classification" th:text="${car.classification}"></div>
+                                    <div class="cars_tables-tbody-td cars_tables-tbody-td-classification" th:text="${car.classification.getValue()}"></div>
                                     <div class="cars_tables-tbody-td cars_tables-tbody-td-first_registrations">
                                         <div class="cars_tables-tbody-td-first_jc" th:text="${car.firstJc.getValue()}"></div>
                                         <div class="cars_tables-tbody-td-registration_year" th:text="${car.registrationYear}"></div>
@@ -99,11 +99,12 @@
                                         <div class="cars_tables-tbody-td-separator cars_tables-td-small">月</div>
                                     </div>
                                     <div class="cars_tables-tbody-td cars_tables-tbody-td-vehicle_inspections">
-                                        <div class="cars_tables-tbody-td-vi_jc" th:text="${car.viJc.getValue()}"></div>
+                                        <div class="cars_tables-tbody-td-vi_jc" th:if="${car.viJc} != null" th:text="${car.viJc.getValue()}"></div>
+                                        <div class="cars_tables-tbody-td-vi_jc" th:if="${car.viJc} == null" th:text="車検２年付"></div>
                                         <div class="cars_tables-tbody-td-vi_year" th:text="${car.viYear}"></div>
-                                        <div class="cars_tables-tbody-td-separator cars_tables-td-small">年</div>
+                                        <div class="cars_tables-tbody-td-separator cars_tables-td-small" th:if="${car.viYear}">年</div>
                                         <div class="cars_tables-tbody-td-vi_month" th:text="${car.viMonth}"></div>
-                                        <div class="cars_tables-tbody-td-separator cars_tables-td-small">月</div>
+                                        <div class="cars_tables-tbody-td-separator cars_tables-td-small" th:if="${car.viMonth}">月</div>
                                     </div>
                                     <div class="cars_tables-tbody-td cars_tables-tbody-td-prices">
                                         <div class="cars_tables-tbody-td-price" th:text="${car.price}"></div>
