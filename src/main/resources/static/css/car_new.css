@@ -119,6 +119,13 @@
   border: 1px solid rgb(198, 198, 198);
 }
 
+.car_news_news-td-first_jc {
+  margin-right: 5px;
+  padding: 12px 0;
+  border: 1px solid rgb(198, 198, 198);
+}
+
+
 .car_news_tables-td-vi_year {
   width: 50px;
 }

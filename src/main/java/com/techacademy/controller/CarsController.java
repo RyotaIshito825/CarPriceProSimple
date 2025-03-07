@@ -8,10 +8,12 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import com.techacademy.constants.ErrorKinds;
 import com.techacademy.entity.Car;
 import com.techacademy.service.CarService;
 
@@ -31,10 +33,6 @@ public class CarsController {
     public String top(Model model) {
 
         List<Car> cars = carService.findAll();
-        for (Car car : cars) {
-            System.out.println(car.getMaker());
-        }
-
         model.addAttribute("carList", cars);
 
         return "cars/list";
@@ -47,7 +45,6 @@ public class CarsController {
         Car car = carService.findById(id);
         boolean viExits = String.valueOf(car.getViYear()) == null ? false : true;
 
-        System.out.println(viExits);
         model.addAttribute("viExits", viExits);
         model.addAttribute("car", car);
 
@@ -56,12 +53,22 @@ public class CarsController {
 
     // 車両新規登録
     @GetMapping(value = "/add")
-    public String create() {
+    public String create(@ModelAttribute Car car) {
         return "cars/new";
     }
     // 車両新規登録処理
     @PostMapping(value = "/add")
-    public String add() {
+    public String add(@Validated Car car, BindingResult res, Model model) {
+
+        if (res.hasErrors()) {
+            model.addAttribute("car", car);
+            return "cars/new";
+        }
+
+        ErrorKinds result = carService.createCar(car);
+        if (result == ErrorKinds.SUCCESS) {
+            carService.createCarSave(car);
+        }
         return "redirect:/cars";
     }
 
@@ -76,15 +83,15 @@ public class CarsController {
     @PostMapping(value = "/{id}/update")
     public String update(@Validated Car car, BindingResult res, Model model) {
 
-        System.out.println(car.getCarModel());
-
         if (res.hasErrors()) {
             model.addAttribute("car", car);
             return "cars/edit";
         }
 
-
-
+        ErrorKinds result = carService.updateCar(car);
+        if (result == ErrorKinds.SUCCESS) {
+            carService.updateCarSave(car);
+        }
 
         return "redirect:/cars";
     }

@@ -50,9 +50,34 @@ public class CarService {
         if (car.getGrade().length() > 20) {
             return ErrorKinds.TEXT_RANGECHECK_ERROR;
         }
-
         return ErrorKinds.SUCCESS;
+    }
 
+    // 車両更新登録
+    public void updateCarSave(Car car) {
+        carRepository.save(car);
+    }
+
+    // 車両新規登録
+    @Transactional
+    public ErrorKinds createCar(Car car) {
+     // メーカー桁数チェック
+        if (car.getMaker().length() > 20) {
+            return ErrorKinds.TEXT_RANGECHECK_ERROR;
+        }
+        // 車種桁数チェックエラー
+        if (car.getMaker().length() > 20) {
+            return ErrorKinds.TEXT_RANGECHECK_ERROR;
+        }
+        // グレード桁数チェックエラー
+        if (car.getGrade().length() > 20) {
+            return ErrorKinds.TEXT_RANGECHECK_ERROR;
+        }
+        return ErrorKinds.SUCCESS;
+    }
+    // 車両新規登録処理
+    public void createCarSave(Car car) {
+        carRepository.save(car);
     }
 
 }
