@@ -4,14 +4,54 @@
     </div>
     <nav class="menus">
         <ul class="menu">
-            <li class="menu-list"><i class="fa-solid fa-house side-icon fa-lg"></i>ホーム</li>
-            <li class="menu-list"><i class="fa-solid fa-car side-icon fa-lg"></i>車両一覧</li>
-            <li class="menu-list"><i class="fa-solid fa-file-lines side-icon fa-lg"></i>テンプレート選択</li>
-            <li class="menu-list"><i class="fa-solid fa-car-on side-icon fa-lg"></i>新規登録</li>
-            <li class="menu-list"><i class="fa-solid fa-cloud-arrow-down side-icon fa-lg"></i>データ取込</li>
-            <li class="menu-list"><i class="fa-solid fa-file-pdf side-icon fa-lg"></i>取込済車両一覧</li>
-            <li class="menu-list"><i class="fa-solid fa-user side-icon fa-lg"></i>プロフィール情報</li>
-            <li class="menu-list"><i class="fa-solid fa-user-group side-icon fa-lg"></i>ユーザー一覧</li>
+            <li>
+                <a th:href="@{/cars}" style="" class="menu-list">
+                    <i class="fa-solid fa-house side-icon fa-lg"></i>
+                    <div>ホーム</div>
+                </a>
+            </li>
+            <li>
+                <a th:href="@{/cars}" style="" class="menu-list">
+                    <i class="fa-solid fa-car side-icon fa-lg"></i>
+                    <div>車両一覧</div>
+                </a>
+            </li>
+            <li>
+                <a th:href="@{/cars/template}" style="" class="menu-list">
+                    <i class="fa-solid fa-file-lines side-icon fa-lg"></i>
+                    <div>テンプレート選択</div>
+                </a>
+            </li>
+            <li>
+                <a th:href="@{/cars/add}" style="" class="menu-list">
+                    <i class="fa-solid fa-car-on side-icon fa-lg"></i>
+                    <div>新規登録</div>
+                </a>
+            </li>
+            <li>
+                <a th:href="@{/cars/add}" style="" class="menu-list">
+                    <i class="fa-solid fa-cloud-arrow-down side-icon fa-lg"></i>
+                    <div>データ取込</div>
+                </a>
+            </li>
+            <li>
+                <a th:href="@{/cars/add}" style="" class="menu-list">
+                    <i class="fa-solid fa-file-pdf side-icon fa-lg"></i>
+                    <div>取込済車両一覧</div>
+                </a>
+            </li>
+            <li>
+                <a th:href="@{/cars/add}" style="" class="menu-list">
+                    <i class="fa-solid fa-user side-icon fa-lg"></i>
+                    <div>プロフィール情報</div>
+                </a>
+            </li>
+            <li>
+                <a th:href="@{/employees}" style="" class="menu-list">
+                    <i class="fa-solid fa-user-group side-icon fa-lg"></i>
+                    <div>ユーザー一覧</div>
+                </a>
+            </li>
         </ul>
     </nav>
 

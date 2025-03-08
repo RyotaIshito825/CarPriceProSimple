@@ -12,20 +12,29 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import com.techacademy.constants.ErrorKinds;
 import com.techacademy.entity.Car;
+import com.techacademy.entity.Employee;
+import com.techacademy.entity.PriceCard;
 import com.techacademy.service.CarService;
+import com.techacademy.service.EmployeeService;
+import com.techacademy.service.PriceCardService;
 
 @Controller
 @RequestMapping("cars")
 public class CarsController {
 
     private final CarService carService;
+    private final PriceCardService priceCardService;
+    private final EmployeeService employeeService;
 
     @Autowired
-    public CarsController(CarService carService) {
+    public CarsController(CarService carService, PriceCardService priceCardService, EmployeeService employeeService) {
         this.carService = carService;
+        this.priceCardService = priceCardService;
+        this.employeeService = employeeService;
     }
 
     // 車両一覧画面表示
@@ -118,5 +127,22 @@ public class CarsController {
     public String template() {
         return "cars/template";
     }
+    // テンプレート
+    @PostMapping(value = "/template")
+    public String confirmedTemplate(@RequestParam("priceCardName") String priceCardName) {
 
+
+        PriceCard priceCard = priceCardService.findByEmployeeId(1);
+        if (priceCard == null) {
+            PriceCard newPriceCard = new PriceCard();
+            newPriceCard.setPriceCardName(priceCardName);
+            newPriceCard.setEmployee(new Employee());
+            priceCardService.save(newPriceCard);
+        } else {
+            priceCard.setPriceCardName(priceCardName);
+            priceCardService.save(priceCard);
+        }
+        System.out.println(priceCardName);
+        return "redirect:/cars";
+    }
 }

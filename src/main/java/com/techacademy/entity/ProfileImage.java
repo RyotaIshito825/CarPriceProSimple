@@ -37,7 +37,7 @@ public class ProfileImage {
     private String fileSize;
 
     @OneToOne
-    @JoinColumn(name = "employee_code", referencedColumnName = "code", nullable = false)
+    @JoinColumn(name = "employee_id", referencedColumnName = "id", nullable = false)
     private Employee employee;
 
 }

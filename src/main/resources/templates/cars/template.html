@@ -20,7 +20,10 @@
                         </div>
 
                         <div class="templates-pdf-creates">
-                            <input type="submit" name="" value="確定" class="templates-pef-create-input">
+                            <form th:action="@{/cars/template}" method="post">
+                                <input type="hidden" name="priceCardName" value="" id="template-card-name">
+                                <input type="submit" name="" value="確定" class="templates-pef-create-input">
+                            </form>
                         </div>
                     </div>
 
@@ -91,6 +94,7 @@
             const templateModalShadows = document.querySelectorAll(".template_modal-shadow");
             const templateImageNames = document.querySelectorAll(".template_image-name");
             const templatesSelectedPricecard = document.querySelector(".templates-selected-pricecard");
+            const templateCardName = document.getElementById("template-card-name");
 
             for (let i = 0; i < templateModalShadows.length; i++) {
 
@@ -108,9 +112,8 @@
 
                 templateModalShadows[i].addEventListener("click", () => {
                     templatesSelectedPricecard.innerText = templateImages[i].id;
+                    templateCardName.value = templateImages[i].id;
                 });
-
-
             };
 
         </script>

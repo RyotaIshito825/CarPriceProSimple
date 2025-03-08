@@ -4,6 +4,8 @@ import java.time.LocalDateTime;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -30,7 +32,7 @@ public class Employee {
     // ID
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer code;
+    private Integer id;
 
     // メールアドレス
     @Column(length = 255, nullable = false, unique = true)
@@ -50,6 +52,7 @@ public class Employee {
 
     // 権限
     @Column(columnDefinition="VARCHAR(10)", nullable = false)
+    @Enumerated(EnumType.STRING)
     private Role role;
 
     // 削除フラグ(論理削除を行うため)
