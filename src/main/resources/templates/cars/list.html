@@ -48,18 +48,17 @@
                     </div>
 
                     <div class="car_list-selected-pricecards">
-                        <div class="car_list-selected-pricecard-wrapper">
+                        <div class="car_list-selected-pricecard-wrapper" style="width: 160px;">
                             <label for="" class="car_list-selected-pricecard-label">選択テンプレート</label>
-                            <div class="car_list-selected-pricecard">選択されていません</div>
+                            <div class="car_list-selected-pricecard" th:if="${priceCardName} != null" th:text="${priceCardName}" style="font-size: 12px;"></div>
+                            <div class="car_list-selected-pricecard" th:if="${priceCardName} == null" th:text="選択されていません"></div>
                         </div>
 
                         <div class="car_list-pdf-creates">
                             <input type="submit" name="" value="pdf作成" class="car_list-pef-create-input">
                         </div>
                     </div>
-                </div>
-
-
+                </div> 
 
 
                 <div class="cars_tables">
