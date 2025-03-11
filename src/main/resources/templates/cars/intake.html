@@ -20,6 +20,7 @@
                                 <input type="text" name="url" value="" class="car_intake-url-input" placeholder="https://docs.google.com/spreadsheets/...">
                             </div>
                         </div>
+                        <p th:if="${error}" th:text="${error}" class="text-danger mt-2" style="text-align: center;"></p>
 
                         <div class="car_intake-separator">- OR -</div>
 

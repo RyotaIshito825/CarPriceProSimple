@@ -20,6 +20,9 @@ public class ErrorMessage {
             put(ErrorKinds.TEXT_RANGECHECK_ERROR, new ArrayList<String>(Arrays.asList("textError", "20文字以内で入力してください")));
             put(ErrorKinds.THREE_RANGECHECK_ERROR, new ArrayList<String>(Arrays.asList("textError", "3文字以内で入力してください")));
             put(ErrorKinds.ONE_RANGECHECK_ERROR, new ArrayList<String>(Arrays.asList("textError", "1文字以内で入力してください")));
+
+            put(ErrorKinds.GOOGLESPREADSHEET_AUTHORITY_ERROR, new ArrayList<String>(Arrays.asList("googleSpreadSheetAuthorityError", "エラー: アクセス権限が不足しています。スプレッドシートの共有設定や認証情報、APIキーを確認してください")));
+
         }
     };
 

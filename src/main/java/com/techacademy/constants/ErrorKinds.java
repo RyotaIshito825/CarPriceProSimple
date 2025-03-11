@@ -19,6 +19,8 @@ public enum ErrorKinds {
     THREE_RANGECHECK_ERROR,
     // 桁数(1文字)チェックエラー
     ONE_RANGECHECK_ERROR,
+    // 権限チェックエラー
+    GOOGLESPREADSHEET_AUTHORITY_ERROR,
     // チェックOK
     CHECK_OK,
     // 正常終了

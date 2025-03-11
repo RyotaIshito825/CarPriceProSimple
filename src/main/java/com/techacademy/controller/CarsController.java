@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.google.api.client.googleapis.javanet.GoogleNetHttpTransport;
+import com.google.api.client.googleapis.json.GoogleJsonResponseException;
 import com.google.api.client.http.HttpRequestInitializer;
 import com.google.api.client.http.HttpTransport;
 import com.google.api.client.json.JsonFactory;
@@ -33,6 +34,7 @@ import com.google.auth.http.HttpCredentialsAdapter;
 import com.google.auth.oauth2.GoogleCredentials;
 import com.google.auth.oauth2.ServiceAccountCredentials;
 import com.techacademy.constants.ErrorKinds;
+import com.techacademy.constants.ErrorMessage;
 import com.techacademy.entity.Car;
 import com.techacademy.entity.Employee;
 import com.techacademy.entity.PriceCard;
@@ -166,44 +168,54 @@ public class CarsController {
     }
     // データ取込処理
     @PostMapping(value = "/intake")
-    public String regi(String url) throws IOException, GeneralSecurityException {
+    public String regi(String url, Model model) throws IOException, GeneralSecurityException {
 
-        System.out.println("url : " + url);
-
-        String spreadSheetId = "1adCiiwosULK7kxkVJLovjJIZeq0OhwBNf5wAyfzjTqs";
-        String sheetName = "車両一覧";
-        String range = getDynamicRange(spreadSheetId, sheetName);
-
-        List<List<Object>> rows = getRows(spreadSheetId, range);
-
-        if (rows == null || rows.isEmpty()) {
-            System.out.println("行データがありません");
-        } else {
-            for (List<Object> row : rows) {
-                System.out.println(row);
+        try {
+            if (url.isEmpty()) {
+                return "redirect:/cars/intake";
             }
+
+            String spreadSheetId = getSpreadSheetId(url);
+            String spreadSheetGid = getSpreadSheetGid(url);
+            String sheetName = getSheetNameFromGid(spreadSheetId, spreadSheetGid);
+            String range = getDynamicRange(spreadSheetId, sheetName);
+
+            List<List<Object>> rows = getRows(spreadSheetId, range);
+            for (List<Object> row : rows) {
+                Car car = new Car();
+                car.setCarModel(String.valueOf(row.get(4)));
+
+                System.out.println(row.get(0));
+                System.out.println(row.get(1));
+                System.out.println(row.get(2));
+                System.out.println(row.get(3));
+                System.out.println(row.get(4));
+                System.out.println(row.get(5));
+                System.out.println(row.get(6));
+                System.out.println(row.get(7));
+                System.out.println(row.get(8));
+                System.out.println(row.get(9));
+                System.out.println(row.get(10));
+                System.out.println(row.get(11));
+                System.out.println(row.get(12));
+                System.out.println(row.get(13));
+                System.out.println(row.get(14));
+            }
+
+            System.out.println("id : " + getSpreadSheetId(url));
+            System.out.println("gid : " + getSpreadSheetGid(url));
+
+            return "redirect:/cars";
+
+        } catch (GoogleJsonResponseException e) { // スプレッドシートの権限エラー処理
+
+            model.addAttribute("error", ErrorMessage.getErrorValue(ErrorKinds.GOOGLESPREADSHEET_AUTHORITY_ERROR));
+            return "/cars/intake";
         }
-
-        Sheets service = getSpreadsheets();
-        Spreadsheet response = service.spreadsheets().get(spreadSheetId).execute();
-        List<Sheet> sheets = response.getSheets();
-        for (Sheet sheet : sheets) {
-            System.out.println(sheet.getProperties().getTitle());
-        }
-
-
-        if (url != null && !url.isEmpty()) {
-
-            System.out.println(getSpreadSheetsId(url));
-
-            System.out.println(getSpreadSheetId(url));
-        }
-
-        return "redirect:/cars";
     }
 
     // GoogleSpreadSheetのURLからIDを取得
-    public static String getSpreadSheetsId(String spreadSheetUrl) {
+    public static String getSpreadSheetId(String spreadSheetUrl) {
         int index = spreadSheetUrl.indexOf("/d/");
         spreadSheetUrl = spreadSheetUrl.substring(index + 3);
         index = spreadSheetUrl.indexOf("/edit");
@@ -211,20 +223,44 @@ public class CarsController {
 
         return spreadSheetUrl;
     }
-    // GoogleSpreadSheetのURLからシートIDを取得
-    public static String getSpreadSheetId(String spreadSheetUrl) {
+    // GoogleSpreadSheetのURLからシートGIDを取得
+    public static String getSpreadSheetGid(String spreadSheetUrl) {
         String spreadSheetId = spreadSheetUrl.substring(spreadSheetUrl.lastIndexOf("gid=") + 4);
         return spreadSheetId;
+    }
+    // 対象のシート名を取得
+    public static String getSheetNameFromGid(String spreadSheetId, String targetGid) throws IOException, GeneralSecurityException {
+        Spreadsheet response = getSpreadsheets().spreadsheets().get(spreadSheetId).execute();
+        List<Sheet> sheets = response.getSheets();
+        if (sheets != null) {
+            for (Sheet sheet : sheets) {
+                String sheetGid = String.valueOf(sheet.getProperties().getSheetId());
+                if (sheetGid.equals(targetGid)) {
+                    return sheet.getProperties().getTitle();
+                }
+            }
+        }
+        return null;
     }
 
     // シートの最終行を動的に取得して範囲を指定
     public static String getDynamicRange(String spreadsheetId, String sheetName) throws IOException, GeneralSecurityException {
         Sheets service = getSpreadsheets();
-        String range = sheetName + "!A:A";
+        String range = sheetName + "!A:Z";
         ValueRange result = service.spreadsheets().values().get(spreadsheetId, range).execute();
         List<List<Object>> values = result.getValues();
-        int lastRow = values != null ? values.size() : 0;
-        String dynamicRange = sheetName + "!A2:D" + lastRow;
+
+        int lastRowIndex = values.size() - 1;
+        List<Object> lastRow = values.get(lastRowIndex);
+        int lastColumnIndex = lastRow.size() - 1;
+
+        System.out.println("lastRowIndex : " + lastRowIndex);
+        System.out.println("lastColumnIndex : " + lastColumnIndex);
+
+//        int lastRow = values != null ? values.size() : 0;
+        lastRowIndex = lastRowIndex + 1; // 3行目から取得したい
+        String dynamicRange = sheetName + "!A" + lastRowIndex + ":" + lastColumnIndex;
+        System.out.println(dynamicRange);
         return dynamicRange;
     }
 
@@ -237,6 +273,9 @@ public class CarsController {
                 .execute();
         // 行データをリストで取得
         List<List<Object>> rows = response.getValues();
+        for (List<Object> row : rows) {
+            System.out.println("row : " + row);
+        }
         return rows;
     }
 
