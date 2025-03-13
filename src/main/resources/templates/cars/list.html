@@ -47,6 +47,7 @@
                         <div class="car_list-search-reset-btn">リセット</div>
                     </div>
 
+                    <form th:action="@{/cars/generateAndSave}" method="post" class="car_list-selected-pricecards">
                     <div class="car_list-selected-pricecards">
                         <div class="car_list-selected-pricecard-wrapper" style="width: 160px;">
                             <label for="" class="car_list-selected-pricecard-label">選択テンプレート</label>
@@ -56,9 +57,11 @@
 
                         <div class="car_list-pdf-creates">
                             <input type="submit" name="" value="pdf作成" class="car_list-pef-create-input">
+                            <input type="hidden" th:if="${priceCardName}" name="priceCardName" th:value="${priceCardName}">
                         </div>
                     </div>
-                </div> 
+                    </form>
+                </div>
 
 
                 <div class="cars_tables">

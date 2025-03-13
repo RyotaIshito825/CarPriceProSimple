@@ -13,7 +13,7 @@
                 <div class="content-mains_inner">
                     <div class="page_title">データ取込</div>
 
-                    <form th:action="@{/cars/intake}" method="post">
+                    <form th:action="@{/cars/intake}" method="post" enctype="multipart/form-data">
                         <div class="car_intake-urls">
                             <div class="car_intake-url-text">GoogleスプレッドシートURL</div>
                             <div class="car_intake-url-inputs">
@@ -29,9 +29,10 @@
 
                             <div class="car_intake-file-upload-btns">
                                 <div class="car_intake-file-upload-btn-wrapper">
-                                    <button type="button" onclick="document.getElementById('profileImageInput').click();" class="car_intake-file-upload-button"><i class="fa-solid fa-upload"></i>車両データアップロード</button>
-                                    <input type="file" name="" value="" class="car_intake-file-upload-btn">
+                                    <button type="button" onclick="document.getElementById('excelFileInput').click();" class="car_intake-file-upload-button"><i class="fa-solid fa-upload"></i>車両データアップロード</button>
+                                    <input type="file" name="file" class="car_intake-file-upload-btn" style="" id="excelFileInput" accept=".xls,.xlsx,.xlsm">
                                 </div>
+                                <p id="excelFileName" class="mt-4" style="border-bottom: 1px solid deepskyblue;text-align: center; margin: auto; display: inline-block;">ファイルが選択されていません</p>
                             </div>
                         </div>
 
@@ -42,5 +43,21 @@
                 </div>
             </div>
         </div>
+
+        <script>
+
+            const element = document.getElementById("excelFileInput");
+            const excelFileName = document.getElementById("excelFileName");
+
+            element.addEventListener("change", (e) => {
+               const file = e.target.files[0];
+               if (file) {
+                 excelFileName.innerText = file.name;
+               } else {
+                 excelFileName.innerText = "ファイルが選択されていません";
+               }
+            });
+
+        </script>
 </body>
 </html>

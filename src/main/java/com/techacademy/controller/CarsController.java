@@ -1,5 +1,6 @@
 package com.techacademy.controller;
 
+import java.io.ByteArrayInputStream;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -7,6 +8,11 @@ import java.security.GeneralSecurityException;
 import java.util.Arrays;
 import java.util.List;
 
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.CellType;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.ss.usermodel.WorkbookFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -18,6 +24,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.google.api.client.googleapis.javanet.GoogleNetHttpTransport;
 import com.google.api.client.googleapis.json.GoogleJsonResponseException;
@@ -36,6 +43,8 @@ import com.google.auth.oauth2.ServiceAccountCredentials;
 import com.techacademy.constants.ErrorKinds;
 import com.techacademy.constants.ErrorMessage;
 import com.techacademy.entity.Car;
+import com.techacademy.entity.Car.Classification;
+import com.techacademy.entity.Car.JapaneseCalendar;
 import com.techacademy.entity.Employee;
 import com.techacademy.entity.PriceCard;
 import com.techacademy.service.CarService;
@@ -68,8 +77,6 @@ public class CarsController {
         if (priceCard != null) {
             model.addAttribute("priceCardName", priceCard.getPriceCardName());
         }
-
-
 
         return "cars/list";
     }
@@ -145,7 +152,7 @@ public class CarsController {
     }
     // テンプレート
     @PostMapping(value = "/template")
-    public String confirmedTemplate(@RequestParam("priceCardName") String priceCardName) {
+    public String confirmedTemplate(@RequestParam String priceCardName) {
 
         PriceCard priceCard = priceCardService.findByEmployeeId(1);
         Employee employee = employeeService.findById(1);
@@ -168,7 +175,14 @@ public class CarsController {
     }
     // データ取込処理
     @PostMapping(value = "/intake")
-    public String regi(String url, Model model) throws IOException, GeneralSecurityException {
+    public String regi(String url, MultipartFile file, Model model) throws IOException, GeneralSecurityException {
+
+        if (file != null && !file.isEmpty()) {
+            registerExcelFileDataVehicle(file);
+            if (url.isEmpty()) {
+                return "redirect:/cars";
+            }
+        }
 
         try {
             if (url.isEmpty()) {
@@ -181,29 +195,47 @@ public class CarsController {
             String range = getDynamicRange(spreadSheetId, sheetName);
 
             List<List<Object>> rows = getRows(spreadSheetId, range);
+
             for (List<Object> row : rows) {
+                if (row.get(0).equals("") || row.get(1).equals("") || row.get(2).equals("")
+                        || row.get(3).equals("") || row.get(4).equals("") || row.get(5).equals("")
+                        || row.get(9).equals("") || row.get(10).equals("") || row.get(11).equals("")
+                        || row.get(12).equals("") || row.get(13).equals("") || row.get(14).equals("")) {
+                    continue;
+                }
                 Car car = new Car();
-                car.setCarModel(String.valueOf(row.get(4)));
+                car.setMaker(String.valueOf(row.get(4)));
+                car.setCarModel(String.valueOf(row.get(5)));
+                car.setGrade(String.valueOf(row.get(9)));
+                for (Classification classification : Car.Classification.values()) {
+                    if (String.valueOf(classification.getValue()).equals(String.valueOf(row.get(0)))) {
+                        car.setClassification(classification);
+                    }
+                }
+                for (JapaneseCalendar japaneseCalendar : Car.JapaneseCalendar.values()) {
+                    if (String.valueOf(japaneseCalendar.getValue()).equals(String.valueOf(row.get(1)))) {
+                        car.setFirstJc(japaneseCalendar);
+                    }
+                    if (String.valueOf(japaneseCalendar.getValue()).equals(String.valueOf(row.get(6)))) {
+                        car.setViJc(japaneseCalendar);
+                    }
+                }
 
-                System.out.println(row.get(0));
-                System.out.println(row.get(1));
-                System.out.println(row.get(2));
-                System.out.println(row.get(3));
-                System.out.println(row.get(4));
-                System.out.println(row.get(5));
-                System.out.println(row.get(6));
-                System.out.println(row.get(7));
-                System.out.println(row.get(8));
-                System.out.println(row.get(9));
-                System.out.println(row.get(10));
-                System.out.println(row.get(11));
-                System.out.println(row.get(12));
-                System.out.println(row.get(13));
-                System.out.println(row.get(14));
+                car.setRegistrationYear(Integer.parseInt(String.valueOf(row.get(2))));
+                car.setRegistrationMonth(Integer.parseInt(String.valueOf(row.get(3))));
+                car.setViYear(Integer.parseInt(String.valueOf(row.get(7))));
+                car.setViMonth(Integer.parseInt(String.valueOf(row.get(8))));
+                car.setPrice(Integer.parseInt(String.valueOf(row.get(10))));
+                car.setPriceDpf(Integer.parseInt(String.valueOf(row.get(11))));
+                car.setTotalPrice(Integer.parseInt(String.valueOf(row.get(12))));
+                car.setTotalPriceDpf(Integer.parseInt(String.valueOf(row.get(13))));
+                car.setMileage(Integer.parseInt(String.valueOf(row.get(14))));
+
+                ErrorKinds result = carService.createCar(car);
+                if (result == ErrorKinds.SUCCESS) {
+                    carService.createCarSave(car);
+                }
             }
-
-            System.out.println("id : " + getSpreadSheetId(url));
-            System.out.println("gid : " + getSpreadSheetGid(url));
 
             return "redirect:/cars";
 
@@ -213,6 +245,27 @@ public class CarsController {
             return "/cars/intake";
         }
     }
+
+    @PostMapping("/generateAndSave")
+    public String generateAndSavePdf(String priceCardName, Model model) throws Exception {
+
+        if (priceCardName == null) {
+            return "redirect:/cars";
+        }
+
+        System.out.println(priceCardName);
+        String priceCardNameNum = priceCardName.substring(priceCardName.lastIndexOf("-") + 1);
+        System.out.println(priceCardNameNum);
+
+
+        model.addAttribute("maker", "ダイハツ");
+
+        return "/pricecards/pricecard" + priceCardNameNum;
+    }
+
+
+
+
 
     // GoogleSpreadSheetのURLからIDを取得
     public static String getSpreadSheetId(String spreadSheetUrl) {
@@ -259,7 +312,7 @@ public class CarsController {
 
 //        int lastRow = values != null ? values.size() : 0;
         lastRowIndex = lastRowIndex + 1; // 3行目から取得したい
-        String dynamicRange = sheetName + "!A" + lastRowIndex + ":" + lastColumnIndex;
+        String dynamicRange = sheetName + "!A" + 3 + ":" + lastColumnIndex;
         System.out.println(dynamicRange);
         return dynamicRange;
     }
@@ -289,8 +342,92 @@ public class CarsController {
         HttpRequestInitializer httpRequestInitializer = new HttpCredentialsAdapter(credential);
 
         Sheets service = new Sheets.Builder(transport, jsonFactory, httpRequestInitializer).build();
-
         return service;
     }
 
+    // fileから車両を登録する
+    public void registerExcelFileDataVehicle(MultipartFile file) throws IOException {
+        byte[] bytes = file.getBytes();
+        ByteArrayInputStream inputStream = new ByteArrayInputStream(bytes);
+
+        Workbook wb = WorkbookFactory.create(inputStream);
+        org.apache.poi.ss.usermodel.Sheet sheet = wb.getSheet("車両一覧");
+
+        int lastRowN = sheet.getLastRowNum();
+        int actualRowCount = 0;
+
+        // 実際にデータが入力されている行数を取得
+        for (int i = 0; i <= lastRowN; i++) {
+            Row r = sheet.getRow(i);
+            if (r != null) {
+                boolean isEmpty = true;
+                for (int j = 0; j < r.getPhysicalNumberOfCells(); j++) {
+                    Cell cell = r.getCell(j);
+                    if (cell != null && cell.getCellType() != CellType.BLANK) {
+                        isEmpty = false;
+                        break;
+                    }
+                }
+                if (!isEmpty) {
+                    actualRowCount++;
+                }
+            }
+        }
+
+        // 見出し行の最終列の取得
+        Row headerRow = sheet.getRow(0);
+        int headerRowSize = 0;
+        if (headerRow != null) {
+            for (int i = 0; i < headerRow.getLastCellNum(); i++) {
+                Cell cell = headerRow.getCell(i);
+                if (cell != null && cell.getCellType() != CellType.BLANK) {
+                    headerRowSize = i;
+                }
+            }
+        }
+
+        for (int i = 2; i < actualRowCount; i++) {
+            Row row = sheet.getRow(i);
+            if (row != null) {
+                Car car = new Car();
+                if (row.getCell(0).getCellType() == CellType.BLANK || row.getCell(1).getCellType() == CellType.BLANK || row.getCell(2).getCellType() == CellType.BLANK
+                        || row.getCell(3).getCellType() == CellType.BLANK || row.getCell(4).getCellType() == CellType.BLANK || row.getCell(5).getCellType() == CellType.BLANK
+                        || row.getCell(9).getCellType() == CellType.BLANK || row.getCell(10).getCellType() == CellType.BLANK || row.getCell(11).getCellType() == CellType.BLANK
+                        || row.getCell(12).getCellType() == CellType.BLANK || row.getCell(13).getCellType() == CellType.BLANK || row.getCell(14).getCellType() == CellType.BLANK) {
+                    continue;
+                }
+                car.setMaker(String.valueOf(row.getCell(4)));
+                car.setCarModel(String.valueOf(row.getCell(5)));
+                car.setGrade(String.valueOf(row.getCell(9)));
+                for (Classification classification : Car.Classification.values()) {
+                    if (String.valueOf(classification.getValue()).equals(String.valueOf(row.getCell(0)))) {
+                        car.setClassification(classification);
+                    }
+                }
+                for (JapaneseCalendar japaneseCalendar : Car.JapaneseCalendar.values()) {
+                    if (String.valueOf(japaneseCalendar.getValue()).equals(String.valueOf(row.getCell(1)))) {
+                        car.setFirstJc(japaneseCalendar);
+                    }
+                    if (String.valueOf(japaneseCalendar.getValue()).equals(String.valueOf(row.getCell(6)))) {
+                        car.setViJc(japaneseCalendar);
+                    }
+                }
+
+                car.setRegistrationYear((int)(Double.parseDouble(String.valueOf(row.getCell(2)))));
+                car.setRegistrationMonth((int)Double.parseDouble(String.valueOf(row.getCell(3))));
+                car.setViYear((int)Double.parseDouble(String.valueOf(row.getCell(7))));
+                car.setViMonth((int)Double.parseDouble(String.valueOf(row.getCell(8))));
+                car.setPrice((int)Double.parseDouble(String.valueOf(row.getCell(10))));
+                car.setPriceDpf((int)Double.parseDouble(String.valueOf(row.getCell(11))));
+                car.setTotalPrice((int)Double.parseDouble(String.valueOf(row.getCell(12))));
+                car.setTotalPriceDpf((int)Double.parseDouble(String.valueOf(row.getCell(13))));
+                car.setMileage((int)Double.parseDouble(String.valueOf(row.getCell(14))));
+
+                ErrorKinds result = carService.createCar(car);
+                if (result == ErrorKinds.SUCCESS) {
+                    carService.createCarSave(car);
+                }
+            }
+        }
+    }
 }

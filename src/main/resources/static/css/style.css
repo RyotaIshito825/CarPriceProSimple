@@ -69,7 +69,7 @@ a {
 }
 
 .card {
-  width: 1045px;
+  width: 1050px;
   margin: 0 auto;
 }
 
@@ -400,7 +400,8 @@ a {
 }
 
 .price-uom {
-  font-size: 22px;
+  font-size: 17px;
+  font-weight: bold;
   margin: 0 10px 0 5px;
 }
 
@@ -450,7 +451,8 @@ a {
 }
 
 .ohde-uom {
-  font-size: 22px;
+  font-size: 17px;
+  font-weight: bold;
   margin: 0 5px;
 }
 
@@ -504,12 +506,14 @@ a {
 
 .with-maintenances-checkboxes {
   display: flex;
+  align-items: center;
   margin-top: 10px;
 }
 
 .with-maintenance {
   width: 20px;
   height: 20px;
+  margin-right: 3px;
   -moz-transform: scale(1.1);
   -webkit-transform: scale(1.1);
   transform: scale(1.1);
@@ -547,12 +551,14 @@ a {
 
 .no-maintenances-checkboxes {
   display: flex;
+  align-items: center;
   margin-top: 10px;
 }
 
 .no-maintenance {
   width: 20px;
   height: 20px;
+  margin-right: 3px;
   -moz-transform: scale(1.1);
   -webkit-transform: scale(1.1);
   transform: scale(1.1);
@@ -570,11 +576,13 @@ a {
 
 .essential-maintenances-checkboxes {
   display: flex;
+  align-items: center;
 }
 
 .essential-maintenance {
   width: 20px;
   height: 20px;
+  margin-right: 3px;
   -moz-transform: scale(1.1);
   -webkit-transform: scale(1.1);
   transform: scale(1.1);
@@ -616,12 +624,14 @@ a {
 
 .with-guarantees-checkboxes {
   display: flex;
+  align-items: center;
   margin-top: 10px;
 }
 
 .with-guarantee {
   width: 20px;
   height: 20px;
+  margin-right: 3px;
   -moz-transform: scale(1.1);
   -webkit-transform: scale(1.1);
   transform: scale(1.1);
@@ -731,12 +741,14 @@ a {
 
 .no-guaranteescheckboxes {
   display: flex;
+  align-items: center;
   margin-top: 10px;
 }
 
 .no-guarantee {
   width: 20px;
   height: 20px;
+  margin-right: 3px;
   -moz-transform: scale(1.1);
   -webkit-transform: scale(1.1);
   transform: scale(1.1);
