@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="ja" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8" />
+    <title>PDF Example</title>
+
+
+</head>
+<body> <!-- 冒頭と末尾に|を入れるのを忘れないで-->
+
+    <div class="card" id="content">
+        <!-- 社名部分 -->
+        <div class="headers">
+            <div class="header_left">
+                <div class="company-name-label">販売会社名：</div>
+                <div class="company-name">〇〇会社〇〇店</div>
+            </div>
+            <div class="header_right">
+
+            </div>
+        </div>
+        <!-- 車両情報部分 -->
+        <div class="names">
+            <div class="jc-tags">
+                <div class="jc-tags_inner">
+                    <div class="jc-text1">初度</div>
+                    <div class="jc-text2">登録</div>
+                    <div class="jc-text3">(検査)</div>
+                </div>
+            </div>
+            <div class="jcs">
+                <div class="jcs_inner">
+                    <div class="japanese_calendar">R</div>
+                    <div class="registration_year">3</div>
+                    <div class="jc-unit">年</div>
+                    <div class="registration_month">12</div>
+                    <div class="jc-unit">月</div>
+                </div>
+            </div>
+            <div class="models">
+                <div class="models_inner">
+                    <div class="model-tags">車名：</div>
+                    <div class="maker" th:text="${maker}" th:value="${maker}" style="margin-right: 10px;"></div>
+                    <div class="car_model">ワゴンR</div>
+                </div>
+            </div>
+            <div class="grades">
+                <div class="grades_inner">
+                    <div class="grades-text">グレード・ミッション・排気量（主な仕様区分）</div>
+                    <div class="grade">FZ・AT・660cc</div>
+                </div>
+            </div>
+        </div>
+        <!-- 金額部分 -->
+        <div class="mains">
+            <div class="payment-tags">
+                <div class="payment-tags_inner">
+
+                    <div class="payment-text">支払総額</div>
+                </div>
+            </div>
+            <div class="total-prices">
+                <div class="total-prices_inner">
+                    <div class="total-price">162</div>
+                </div>
+            </div>
+            <div class="recycles">
+                <div class="recycles_inner">
+                    <div class="recycles-text">★支払総額には、保険料、税金(いずれも未経過相当含む)、リサイクル料金相当額、登録等に伴う費用等全ての費用が含まれています。</div>
+                    <div class="recycles-text recycles-text2">★リサイクル料金</div>
+                    <div class="depositeds">
+                        <div class="depositeds-wrapper">
+                            <input type="checkbox" class="deposited" name="" value="" />
+                            <div class="deposited-text">預託済み</div>
+                        </div>
+                        <div class="depositeds-attached">
+                            <input type="checkbox" class="deposited-attached" name="" id="" />
+                            <div class="deposited-attached-text">廃棄時にリサイクル料金の追加が必要な装備が付いています。</div>
+                        </div>
+                    </div>
+                    <div class="not-depositeds">
+                        <input type="checkbox" class="not-deposited" name="" value="" />
+                        <div class="not-deposited-text">未預託(廃棄時に支払いが必要となります。)</div>
+                    </div>
+                </div>
+                <div class="total-price_dots-wrapper">
+                    <div class="total_price-dot_inner">
+                        <div class="total-price-dot">⚫︎</div>
+                        <div class="total-price-dpf">9</div>
+                    </div>
+                    <div class="mains-uom_inner">
+                        <div class="mains-uom">万円</div>
+                        <div class="mains-ticdd">(消費税込み)</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- 車両価格と諸費用の行 -->
+        <div class="price-ohde">
+            <div class="price-wrapper">
+                <div class="price-tag">車両価格</div>
+                <div class="prices">
+                    <div class="price">152</div>
+                    <div class="price-dot">.</div>
+                    <div class="price-dpf">8</div>
+                </div>
+                <div class="price-uom">万円</div>
+            </div>
+            <div class="ohde-wrapper">
+                <div class="ohde-tag">諸費用</div>
+                <div class="ohdes">
+                    <div class="ohde">10</div>
+                    <div class="ohde-dot">.</div>
+                    <div class="ohde-dpf">1</div>
+                </div>
+                <div class="ohde-uom">万円</div>
+            </div>
+            <div class="price-ohde-text">
+                支払総額は<span class="price-ohde-month">12</span>月現在、<span class="price-ohde-city">青森市内</span>登録(届出)で店頭納車の場合の価格です。<br />
+                お客様の要望に基づく整備やオプション等の費用は別途申し受けます。
+            </div>
+        </div>
+        <!-- 整備・保障・車検等 -->
+        <div class="options">
+            <div class="options_inner">
+                <!-- 定期点検整備の有無 -->
+                <div class="maintenances">
+                    <div class="maintenances_wrapper">
+                        <div class="maintenances-title">定期点検整備の有無</div>
+                        <div class="with-maintenances">
+                            <div class="with-maintenances-checkboxes">
+                                <input type="checkbox" class="with-maintenance" name="" value="" />
+                                <div class="with-maintenance-text">定期点検整備付</div>
+                            </div>
+                            <div class="with-maintenances-note">整備費用は車両価格に含みます。<br />★「点検整備記録簿」が交付されます。</div>
+                        </div>
+                        <div class="no-maintenances">
+                            <div class="no-maintenances-checkboxes">
+                                <input type="checkbox" class="no-maintenance" name="" value="" />
+                                <div class="no-maintenance-text">定期点検整備なし</div>
+                            </div>
+                        </div>
+                        <div class="essential-maintenances">
+                            <div class="essential-maintenances-checkboxes">
+                                <input type="checkbox" class="essential-maintenance" name="" value="" />
+                                <div class="essential-maintenance-text">要整備箇所があります</div>
+                            </div>
+                            <div class="essential-maintenances-note">★車両状態を表示した書面にて、<br />部位・状態をご確認下さい。</div>
+                        </div>
+                    </div>
+                </div>
+                <!-- 保証の有無 -->
+                <div class="guarantees">
+                    <div class="guarantees_wrapper">
+                        <div class="guarantees-title">保証の有無</div>
+                        <div class="with-guarantees">
+                            <div class="with-guarantees-checkboxes">
+                                <input type="checkbox" class="with-guarantee" name="" value="" />
+                                <div class="with-guarantee-text">保証付<span>保証費用は車両価格に含みます。</span></div>
+                            </div>
+                            <div class="guarantee-details">
+                                <div class="guarantee-details-text">⚪️保証内容<span>※詳しくはスタッフにお尋ね下さい。</span></div>
+                                <div class="guarantee-details-contents">
+                                    <div class="brackets-first">〔</div>
+                                    <div class="guarantee-details-content">部分保証</div>
+                                    <div class="brackets-end">〕</div>
+                                </div>
+                            </div>
+                            <div class="guarantee-periods">
+                                <div class="guarantee-period-text">⚪️保証期間・保証走行距離</div>
+                                <div class="guarantee-period-contents">
+                                    <div class="brackets-first">〔</div>
+                                    <div class="guarantee-period-content">
+                                        <div class="guarantee-period">12</div>
+                                        <div class="guarantee-period-text">ヵ月<span>又は</span></div>
+                                        <div class="guarantee-distance">10</div>
+                                        <div class="guarantee-distance-text">千<span>km</span></div>
+                                    </div>
+                                    <div class="brackets-end">〕</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="no-guarantees">
+                            <div class="no-guaranteescheckboxes">
+                                <input type="checkbox" class="no-guarantee" name="" value="" />
+                                <div class="no-guarantee-text">保証なし</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- 車検等 -->
+                <div class="vi-tables">
+                    <div class="vi-tables_wrapper">
+                        <div class="tr vi_wrapper">
+                            <div class="th">車検証有効期限</div>
+                            <div class="td vi_jc_wrapper">
+                                <div class="vi_jc">R</div>
+                                <div class="vi_year">6</div>
+                                <div class="vi_year-tag">年</div>
+                                <div class="vi_month">12</div>
+                                <div class="vi_month-tag">月</div>
+                                <div class="vi_day">12</div>
+                                <div class="vi_day-tag">日</div>
+                            </div>
+                        </div>
+                        <div class="tr mileage_tr">
+                            <div class="th">走行距離</div>
+                            <div class="td">
+                                <div class="mileage_k-km">148</div>
+                                <div class="mileage_k-km-tag">千<span>km</span></div>
+                                <div class="brackets-first">〔</div>
+                                <div class="mileage_km">48,000</div>
+                                <div class="mileage_km-tag">km</div>
+                                <div class="brackets-end">〕</div>
+                            </div>
+                        </div>
+                        <div class="tr has_repair_wrapper">
+                            <div class="th">修理歴</div>
+                            <div class="td">
+                                <div class="has_repair_history_wrapper">
+                                    <div class="has_repair_history">有</div>
+                                    <div class="repair_history_dot">・</div>
+                                    <div class="not_repair_history">無</div>
+                                </div>
+                                <div class="repair_history-text">有りの場合、車両状態を表示した書面にて、<br />部位・状態をご確認下さい。</div>
+                            </div>
+                        </div>
+                        <div class="tr riamrb_wrapper">
+                            <div class="th">
+                                <p>前使用者の</p>
+                                <p class="has_riamrb-text2">定期点検整備記録簿</p>
+                            </div>
+                            <div class="td">
+                                <div class="has_riamrb">有</div>
+                                <div class="brackets-first">〔</div>
+                                <div class="riamrb_month">12</div>
+                                <div class="riamrb_month-tag">ヵ月</div>
+                                <div class="brackets-end">〕</div>
+                                <div class="riamrb_dot">・</div>
+                                <div class="not_riamrb">無</div>
+                            </div>
+                        </div>
+                        <div class="tr">
+                            <div class="th">使用歴</div>
+                            <div class="td cars_val">
+                                <div class="private_car">自家用車</div>
+                                <div class="business_car">営業車</div>
+                                <div class="rentalcar">レンタカー</div>
+                                <div class="other">その他</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="footer">
+                <div class="footer-first-text">一般社団法人</div>
+                <div class="footer-second-text">自動車公正取引協議会・会員</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+            document.getElementById('downloadPdf').addEventListener('click', function() {
+                // HTMLをCanvasに変換
+                html2canvas(document.getElementById('content')).then(function(canvas) {
+                    // Canvasを画像データに変換
+                    const imgData = canvas.toDataURL('image/png');
+
+                    // jsPDFを使ってPDFを作成
+                    const { jsPDF } = window.jspdf;
+                    const pdf = new jsPDF('landscape', 'mm', 'a4'); // A4 横向き
+
+                    const imgWidth = canvas.width;
+                    const imgHeight = canvas.height;
+
+                    const pageWidth = 297;
+                    const pageHeight = 210;
+
+                    const ratio = Math.min(pageWidth / imgWidth, pageHeight / imgHeight);
+                    const scaleWidth = imgWidth * ratio;
+                    const scaleHeight = imgHeight * ratio;
+
+                    const marginLeft = (pageWidth - scaleWidth) / 2;
+                    const marginTop = (pageHeight - scaleHeight) / 2;
+
+                    // PDFに画像を追加 (imgDataはCanvasから作成した画像データ)
+                    pdf.addImage(imgData, 'PNG', marginLeft, marginTop, scaleWidth, scaleHeight); // 画像の位置とサイズを指定
+
+                    // PDFをダウンロード
+                    pdf.save('converted.pdf');
+                }).catch(function(error) {
+                    console.error("html2canvasのエラー:", error);
+                });
+            });
+        </script>
+
+</body>
+</html>

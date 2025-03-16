@@ -16,3 +16,10 @@ spring:
     init:
       mode: always
       encoding: UTF-8
+  thymeleaf:
+    prefix: classpath:/templates/
+    suffix: .html
+    cache: false
+  web:
+    resources:
+      static-locations: classpath:/static/

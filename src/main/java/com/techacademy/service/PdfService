@@ -1,0 +1,41 @@
+package com.example.demo.service;
+
+import org.springframework.stereotype.Service;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+
+@Service
+public class PdfService {
+
+    // Node.jsスクリプトを実行してPDFを生成
+    public void generatePdf() {
+        // Node.jsスクリプトのパス
+        String nodeScriptPath = "path/to/your/puppeteer-pdf.js";  // Puppeteerスクリプトのパスを指定
+
+        // Node.jsを呼び出すためのProcessBuilder
+        ProcessBuilder processBuilder = new ProcessBuilder("node", nodeScriptPath);
+
+        try {
+            // スクリプト実行
+            Process process = processBuilder.start();
+            int exitCode = process.waitFor();  // 終了コードを取得
+
+            if (exitCode == 0) {
+                System.out.println("PDF生成成功！");
+            } else {
+                System.out.println("PDF生成失敗！");
+                // エラーログを読み込んで表示
+                BufferedReader reader = new BufferedReader(new InputStreamReader(process.getErrorStream()));
+                String line;
+                while ((line = reader.readLine()) != null) {
+                    System.out.println(line);
+                }
+            }
+
+        } catch (IOException | InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+}

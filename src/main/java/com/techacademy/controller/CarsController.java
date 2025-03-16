@@ -1,6 +1,7 @@
 package com.techacademy.controller;
 
 import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -14,6 +15,10 @@ import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.usermodel.WorkbookFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.InputStreamResource;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -25,6 +30,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
+import org.thymeleaf.context.Context;
+import org.thymeleaf.spring6.SpringTemplateEngine;
 
 import com.google.api.client.googleapis.javanet.GoogleNetHttpTransport;
 import com.google.api.client.googleapis.json.GoogleJsonResponseException;
@@ -40,6 +47,7 @@ import com.google.api.services.sheets.v4.model.ValueRange;
 import com.google.auth.http.HttpCredentialsAdapter;
 import com.google.auth.oauth2.GoogleCredentials;
 import com.google.auth.oauth2.ServiceAccountCredentials;
+import com.openhtmltopdf.pdfboxout.PdfRendererBuilder;
 import com.techacademy.constants.ErrorKinds;
 import com.techacademy.constants.ErrorMessage;
 import com.techacademy.entity.Car;
@@ -49,6 +57,7 @@ import com.techacademy.entity.Employee;
 import com.techacademy.entity.PriceCard;
 import com.techacademy.service.CarService;
 import com.techacademy.service.EmployeeService;
+//import com.techacademy.service.PdfGenerationService;
 import com.techacademy.service.PriceCardService;
 
 @Controller
@@ -58,12 +67,17 @@ public class CarsController {
     private final CarService carService;
     private final PriceCardService priceCardService;
     private final EmployeeService employeeService;
+//    private final PdfGenerationService pdfGenerationService;
+
+    @Autowired
+    private SpringTemplateEngine templateEngine;
 
     @Autowired
     public CarsController(CarService carService, PriceCardService priceCardService, EmployeeService employeeService) {
         this.carService = carService;
         this.priceCardService = priceCardService;
         this.employeeService = employeeService;
+//        this.pdfGenerationService = pdfGenerationService;
     }
 
     // 車両一覧画面表示
@@ -99,6 +113,7 @@ public class CarsController {
     public String create(@ModelAttribute Car car) {
         return "cars/new";
     }
+
     // 車両新規登録処理
     @PostMapping(value = "/add")
     public String add(@Validated Car car, BindingResult res, Model model) {
@@ -122,6 +137,7 @@ public class CarsController {
         model.addAttribute("car", car);
         return "cars/edit";
     }
+
     // 車両更新処理
     @PostMapping(value = "/{id}/update")
     public String update(@Validated Car car, BindingResult res, Model model) {
@@ -145,11 +161,12 @@ public class CarsController {
         return "redirect:/cars";
     }
 
- // テンプレート一覧画面表示
+    // テンプレート一覧画面表示
     @GetMapping(value = "/template")
     public String template() {
         return "cars/template";
     }
+
     // テンプレート
     @PostMapping(value = "/template")
     public String confirmedTemplate(@RequestParam String priceCardName) {
@@ -173,6 +190,7 @@ public class CarsController {
     public String intake() {
         return "cars/intake";
     }
+
     // データ取込処理
     @PostMapping(value = "/intake")
     public String regi(String url, MultipartFile file, Model model) throws IOException, GeneralSecurityException {
@@ -197,10 +215,10 @@ public class CarsController {
             List<List<Object>> rows = getRows(spreadSheetId, range);
 
             for (List<Object> row : rows) {
-                if (row.get(0).equals("") || row.get(1).equals("") || row.get(2).equals("")
-                        || row.get(3).equals("") || row.get(4).equals("") || row.get(5).equals("")
-                        || row.get(9).equals("") || row.get(10).equals("") || row.get(11).equals("")
-                        || row.get(12).equals("") || row.get(13).equals("") || row.get(14).equals("")) {
+                if (row.get(0).equals("") || row.get(1).equals("") || row.get(2).equals("") || row.get(3).equals("")
+                        || row.get(4).equals("") || row.get(5).equals("") || row.get(9).equals("")
+                        || row.get(10).equals("") || row.get(11).equals("") || row.get(12).equals("")
+                        || row.get(13).equals("") || row.get(14).equals("")) {
                     continue;
                 }
                 Car car = new Car();
@@ -246,26 +264,65 @@ public class CarsController {
         }
     }
 
-    @PostMapping("/generateAndSave")
-    public String generateAndSavePdf(String priceCardName, Model model) throws Exception {
+    @GetMapping("/generate-pdf")
+    public ResponseEntity<InputStreamResource> generatePdf(Model model) throws IOException {
+        System.out.println("test");
+        // テンプレートエンジンにデータを渡す
+        Context context = new Context();
+//        context.setVariable("message", "こんにちは、PDFBox!");
 
-        if (priceCardName == null) {
-            return "redirect:/cars";
-        }
+        // HTMLを生成
+        String html = templateEngine.process("pricecard1", context);
+        System.out.println(html);
 
-        System.out.println(priceCardName);
-        String priceCardNameNum = priceCardName.substring(priceCardName.lastIndexOf("-") + 1);
-        System.out.println(priceCardNameNum);
+        // HTMLをPDFに変換
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+        PdfRendererBuilder builder = new PdfRendererBuilder();
 
+        builder.withHtmlContent(html, null);
 
-        model.addAttribute("maker", "ダイハツ");
+        builder.useFont(() -> getClass().getResourceAsStream("/fonts/NotoSansJP-Regular.ttf"), "Noto Sans CJK JP");
+        builder.toStream(outputStream);
+        builder.run();
 
-        return "/pricecards/pricecard" + priceCardNameNum;
+        ByteArrayInputStream inputStream = new ByteArrayInputStream(outputStream.toByteArray());
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Content-Disposition", "inline; filename=example.pdf");
+
+        return ResponseEntity.ok()
+                .headers(headers)
+                .contentType(MediaType.APPLICATION_PDF)
+                .body(new InputStreamResource(inputStream));
     }
 
-
-
-
+//    @PostMapping("/generateAndSave")
+//    @ResponseBody
+//    public String generateAndSavePdf(String priceCardName, Model model) throws Exception {
+//
+//        if (priceCardName == null) {
+//            return "redirect:/cars";
+//        }
+//
+//        System.out.println(priceCardName);
+//        String priceCardNameNum = priceCardName.substring(priceCardName.lastIndexOf("-") + 1);
+//        System.out.println(priceCardNameNum);
+//
+////        model.addAttribute("maker", "ダイハツ");
+//
+//        byte[] pdfContent = pdfGenerationService.generatePdfFromTemplate("pricecard1.html", model);
+//        String outputPath = "/path/to/save/directory/" + priceCardName + ".pdf";
+//
+//        pdfGenerationService.savePdfToFile(pdfContent, outputPath);
+//
+//
+//
+//
+//
+//        return "redirect:/cars";
+//
+////        return "/pricecards/pricecard" + priceCardNameNum;
+//    }
 
     // GoogleSpreadSheetのURLからIDを取得
     public static String getSpreadSheetId(String spreadSheetUrl) {
@@ -276,13 +333,16 @@ public class CarsController {
 
         return spreadSheetUrl;
     }
+
     // GoogleSpreadSheetのURLからシートGIDを取得
     public static String getSpreadSheetGid(String spreadSheetUrl) {
         String spreadSheetId = spreadSheetUrl.substring(spreadSheetUrl.lastIndexOf("gid=") + 4);
         return spreadSheetId;
     }
+
     // 対象のシート名を取得
-    public static String getSheetNameFromGid(String spreadSheetId, String targetGid) throws IOException, GeneralSecurityException {
+    public static String getSheetNameFromGid(String spreadSheetId, String targetGid)
+            throws IOException, GeneralSecurityException {
         Spreadsheet response = getSpreadsheets().spreadsheets().get(spreadSheetId).execute();
         List<Sheet> sheets = response.getSheets();
         if (sheets != null) {
@@ -297,7 +357,8 @@ public class CarsController {
     }
 
     // シートの最終行を動的に取得して範囲を指定
-    public static String getDynamicRange(String spreadsheetId, String sheetName) throws IOException, GeneralSecurityException {
+    public static String getDynamicRange(String spreadsheetId, String sheetName)
+            throws IOException, GeneralSecurityException {
         Sheets service = getSpreadsheets();
         String range = sheetName + "!A:Z";
         ValueRange result = service.spreadsheets().values().get(spreadsheetId, range).execute();
@@ -318,12 +379,11 @@ public class CarsController {
     }
 
     // 行データをリストとして取得するメソッド
-    public static List<List<Object>> getRows(String spreadSheetId, String range) throws IOException, GeneralSecurityException {
+    public static List<List<Object>> getRows(String spreadSheetId, String range)
+            throws IOException, GeneralSecurityException {
         Sheets service = getSpreadsheets();
         // スプレッドシートのデータを取得
-        ValueRange response = service.spreadsheets().values()
-                .get(spreadSheetId, range)
-                .execute();
+        ValueRange response = service.spreadsheets().values().get(spreadSheetId, range).execute();
         // 行データをリストで取得
         List<List<Object>> rows = response.getValues();
         for (List<Object> row : rows) {
@@ -335,7 +395,8 @@ public class CarsController {
     // Sheetsインスタンスの取得
     public static Sheets getSpreadsheets() throws IOException, GeneralSecurityException {
         InputStream input = new FileInputStream("src/main/resources/plated-course-424107-c4-ae0a645e74f3.json");
-        GoogleCredentials credential = ServiceAccountCredentials.fromStream(input).createScoped(Arrays.asList(SheetsScopes.SPREADSHEETS));
+        GoogleCredentials credential = ServiceAccountCredentials.fromStream(input)
+                .createScoped(Arrays.asList(SheetsScopes.SPREADSHEETS));
 
         HttpTransport transport = GoogleNetHttpTransport.newTrustedTransport();
         JsonFactory jsonFactory = GsonFactory.getDefaultInstance();
@@ -390,10 +451,17 @@ public class CarsController {
             Row row = sheet.getRow(i);
             if (row != null) {
                 Car car = new Car();
-                if (row.getCell(0).getCellType() == CellType.BLANK || row.getCell(1).getCellType() == CellType.BLANK || row.getCell(2).getCellType() == CellType.BLANK
-                        || row.getCell(3).getCellType() == CellType.BLANK || row.getCell(4).getCellType() == CellType.BLANK || row.getCell(5).getCellType() == CellType.BLANK
-                        || row.getCell(9).getCellType() == CellType.BLANK || row.getCell(10).getCellType() == CellType.BLANK || row.getCell(11).getCellType() == CellType.BLANK
-                        || row.getCell(12).getCellType() == CellType.BLANK || row.getCell(13).getCellType() == CellType.BLANK || row.getCell(14).getCellType() == CellType.BLANK) {
+                if (row.getCell(0).getCellType() == CellType.BLANK || row.getCell(1).getCellType() == CellType.BLANK
+                        || row.getCell(2).getCellType() == CellType.BLANK
+                        || row.getCell(3).getCellType() == CellType.BLANK
+                        || row.getCell(4).getCellType() == CellType.BLANK
+                        || row.getCell(5).getCellType() == CellType.BLANK
+                        || row.getCell(9).getCellType() == CellType.BLANK
+                        || row.getCell(10).getCellType() == CellType.BLANK
+                        || row.getCell(11).getCellType() == CellType.BLANK
+                        || row.getCell(12).getCellType() == CellType.BLANK
+                        || row.getCell(13).getCellType() == CellType.BLANK
+                        || row.getCell(14).getCellType() == CellType.BLANK) {
                     continue;
                 }
                 car.setMaker(String.valueOf(row.getCell(4)));
@@ -413,15 +481,15 @@ public class CarsController {
                     }
                 }
 
-                car.setRegistrationYear((int)(Double.parseDouble(String.valueOf(row.getCell(2)))));
-                car.setRegistrationMonth((int)Double.parseDouble(String.valueOf(row.getCell(3))));
-                car.setViYear((int)Double.parseDouble(String.valueOf(row.getCell(7))));
-                car.setViMonth((int)Double.parseDouble(String.valueOf(row.getCell(8))));
-                car.setPrice((int)Double.parseDouble(String.valueOf(row.getCell(10))));
-                car.setPriceDpf((int)Double.parseDouble(String.valueOf(row.getCell(11))));
-                car.setTotalPrice((int)Double.parseDouble(String.valueOf(row.getCell(12))));
-                car.setTotalPriceDpf((int)Double.parseDouble(String.valueOf(row.getCell(13))));
-                car.setMileage((int)Double.parseDouble(String.valueOf(row.getCell(14))));
+                car.setRegistrationYear((int) (Double.parseDouble(String.valueOf(row.getCell(2)))));
+                car.setRegistrationMonth((int) Double.parseDouble(String.valueOf(row.getCell(3))));
+                car.setViYear((int) Double.parseDouble(String.valueOf(row.getCell(7))));
+                car.setViMonth((int) Double.parseDouble(String.valueOf(row.getCell(8))));
+                car.setPrice((int) Double.parseDouble(String.valueOf(row.getCell(10))));
+                car.setPriceDpf((int) Double.parseDouble(String.valueOf(row.getCell(11))));
+                car.setTotalPrice((int) Double.parseDouble(String.valueOf(row.getCell(12))));
+                car.setTotalPriceDpf((int) Double.parseDouble(String.valueOf(row.getCell(13))));
+                car.setMileage((int) Double.parseDouble(String.valueOf(row.getCell(14))));
 
                 ErrorKinds result = carService.createCar(car);
                 if (result == ErrorKinds.SUCCESS) {
