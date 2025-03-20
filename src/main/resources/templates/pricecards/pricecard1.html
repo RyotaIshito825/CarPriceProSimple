@@ -1,13 +1,10 @@
 <!DOCTYPE html>
 <html lang="ja" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
-<head>
-    <link rel="stylesheet" href="/css/style.css">
-    <link rel="stylesheet" type="text/css" href="/static/css/styles.css">
-</head>
+<head th:replace="common/header :: head_fragment(title='プライスカード①')"></head>
 
 <body th:style="|background-image: url(@{/img/background-image.jpg});|"> <!-- 冒頭と末尾に|を入れるのを忘れないで-->
 
-    <div class="card" id="content">
+    <div class="card" id="content" th:object="${car}">
         <!-- 社名部分 -->
         <div class="headers">
             <div class="header_left">
@@ -29,24 +26,24 @@
             </div>
             <div class="jcs">
                 <div class="jcs_inner">
-                    <div class="japanese_calendar">R</div>
-                    <div class="registration_year">3</div>
+                    <div class="japanese_calendar" th:text="*{firstJc.getValue()}"></div>
+                    <div class="registration_year" th:text="*{registrationYear}"></div>
                     <div class="jc-unit">年</div>
-                    <div class="registration_month">12</div>
+                    <div class="registration_month" th:text="*{registrationMonth}"></div>
                     <div class="jc-unit">月</div>
                 </div>
             </div>
             <div class="models">
                 <div class="models_inner">
                     <div class="model-tags">車名：</div>
-                    <div class="maker" th:text="${maker}" style="margin-right: 10px;"></div>
-                    <div class="car_model">ワゴンR</div>
+                    <div class="maker" th:text="*{maker}" style="margin-right: 10px;"></div>
+                    <div class="car_model" th:text="*{carModel}"></div>
                 </div>
             </div>
             <div class="grades">
                 <div class="grades_inner">
                     <div class="grades-text">グレード・ミッション・排気量（主な仕様区分）</div>
-                    <div class="grade">FZ・AT・660cc</div>
+                    <div class="grade" th:text="*{grade}"></div>
                 </div>
             </div>
         </div>
@@ -60,7 +57,7 @@
             </div>
             <div class="total-prices">
                 <div class="total-prices_inner">
-                    <div class="total-price">162</div>
+                    <div class="total-price" th:text="*{totalPrice}"></div>
                 </div>
             </div>
             <div class="recycles">
@@ -85,7 +82,7 @@
                 <div class="total-price_dots-wrapper">
                     <div class="total_price-dot_inner">
                         <div class="total-price-dot">⚫︎</div>
-                        <div class="total-price-dpf">9</div>
+                        <div class="total-price-dpf" th:text="*{totalPriceDpf}"></div>
                     </div>
                     <div class="mains-uom_inner">
                         <div class="mains-uom">万円</div>
@@ -99,23 +96,23 @@
             <div class="price-wrapper">
                 <div class="price-tag">車両価格</div>
                 <div class="prices">
-                    <div class="price">152</div>
+                    <div class="price" th:text="*{price}"></div>
                     <div class="price-dot">.</div>
-                    <div class="price-dpf">8</div>
+                    <div class="price-dpf" th:text="*{priceDpf}"></div>
                 </div>
                 <div class="price-uom">万円</div>
             </div>
             <div class="ohde-wrapper">
                 <div class="ohde-tag">諸費用</div>
                 <div class="ohdes">
-                    <div class="ohde">10</div>
+                    <div class="ohde" th:text="${calcPriceOfInt}"></div>
                     <div class="ohde-dot">.</div>
-                    <div class="ohde-dpf">1</div>
+                    <div class="ohde-dpf" th:text="${calcPriceOfDpf}"></div>
                 </div>
                 <div class="ohde-uom">万円</div>
             </div>
             <div class="price-ohde-text">
-                支払総額は<span class="price-ohde-month">12</span>月現在、<span class="price-ohde-city">青森市内</span>登録(届出)で店頭納車の場合の価格です。<br>
+                支払総額は<span class="price-ohde-month">12</span>月現在、<span class="price-ohde-city"><input class="price-card-city-input"></span>登録(届出)で店頭納車の場合の価格です。<br>
                 お客様の要望に基づく整備やオプション等の費用は別途申し受けます。
             </div>
         </div>
@@ -193,12 +190,12 @@
                         <div class="tr vi_wrapper">
                             <div class="th">車検証有効期限</div>
                             <div class="td vi_jc_wrapper">
-                                <div class="vi_jc">R</div>
-                                <div class="vi_year">6</div>
+                                <div class="vi_jc" th:if="*{viJc} != null" th:text="*{viJc.getValue()}"></div>
+                                <div class="vi_year" th:if="*{viYear} != null" th:text="*{viYear}"></div>
                                 <div class="vi_year-tag">年</div>
-                                <div class="vi_month">12</div>
+                                <div class="vi_month" th:if="*{viMonth} != null" th:text="*{viMonth}"></div>
                                 <div class="vi_month-tag">月</div>
-                                <div class="vi_day">12</div>
+                                <div class="vi_day"><input class="price-card-vi-day"></div>
                                 <div class="vi_day-tag">日</div>
                             </div>
                         </div>
@@ -208,7 +205,7 @@
                                 <div class="mileage_k-km">148</div>
                                 <div class="mileage_k-km-tag">千<span>km</span></div>
                                 <div class="brackets-first">〔</div>
-                                <div class="mileage_km">48,000</div>
+                                <div class="mileage_km" th:text="*{mileage}"></div>
                                 <div class="mileage_km-tag">km</div>
                                 <div class="brackets-end">〕</div>
                             </div>

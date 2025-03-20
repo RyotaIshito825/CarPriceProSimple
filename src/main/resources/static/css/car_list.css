@@ -2,6 +2,12 @@
   position: relative;
 }
 
+.cars_list-content-mains {
+  margin-left: 10px;
+  padding: 30px 20px 20px 20px;
+}
+
+
 .car_list-btns {
   position: absolute;
   content: "";
@@ -280,3 +286,15 @@
   font-size: 11px;
   margin-top: 1px;
 }/*# sourceMappingURL=car_list.css.map */
+
+.cars_list_pdf-btn {
+  padding: 5px 10px;
+  margin-left: 10px;
+  background-color: #0097b2;
+  border: none;
+  box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
+  border-radius: 3px;
+  color: white;
+  font-weight: bold;
+}
+

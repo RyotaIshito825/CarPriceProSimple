@@ -9,7 +9,7 @@
         <div th:replace="common/side_bar :: side_bar"></div>
 
         <!-- メイン -->
-        <div class="content-mains">
+        <div class="cars_list-content-mains">
             <div class="content-mains_inner">
                 <div class="page_title">車両一覧</div>
 
@@ -47,19 +47,24 @@
                         <div class="car_list-search-reset-btn">リセット</div>
                     </div>
 
-                    <form th:action="@{/generate-pdf}" method="get" class="car_list-selected-pricecards">
-                    <div class="car_list-selected-pricecards">
-                        <div class="car_list-selected-pricecard-wrapper" style="width: 160px;">
-                            <label for="" class="car_list-selected-pricecard-label">選択テンプレート</label>
-                            <div class="car_list-selected-pricecard" th:if="${priceCardName} != null" th:text="${priceCardName}" style="font-size: 12px;"></div>
-                            <div class="car_list-selected-pricecard" th:if="${priceCardName} == null" th:text="選択されていません"></div>
-                        </div>
+                    <form th:action="@{/generate-pdfs}" method="post" class="car_list-selected-pricecards">
+                        <div class="car_list-selected-pricecards">
+                            <div class="car_list-selected-pricecard-wrapper" style="width: 160px;">
+                                <label for="" class="car_list-selected-pricecard-label">選択テンプレート</label>
+                                <div class="car_list-selected-pricecard" th:if="${priceCardName} != null" th:text="${priceCardName}" style="font-size: 12px;"></div>
+                                <div class="car_list-selected-pricecard" th:if="${priceCardName} == null" th:text="選択されていません"></div>
+                            </div>
 
-                        <div class="car_list-pdf-creates">
-                            <input type="submit" name="" value="pdf作成" class="car_list-pef-create-input">
-                            <input type="hidden" th:if="${priceCardName}" name="priceCardName" th:value="${priceCardName}">
+                            <div class="car_list-pdf-creates">
+                                <input type="submit" name="" value="pdf作成" class="car_list-pef-create-input">
+                                <input type="hidden" th:if="${priceCardName}" name="priceCardName" th:value="${priceCardName}">
+                            </div>
                         </div>
-                    </div>
+                        <div class="cars_tables-tbody" style="display: none;">
+                            <th:block th:each="car : ${carList}">
+                                <input type="checkbox" class="cars_tables-tbody-checkbox-hidden" th:value="${car.id}" name="carIds" />
+                            </th:block>
+                        </div>
                     </form>
                 </div>
 
@@ -82,10 +87,10 @@
                         </div>
                     </div>
 
-                    <div class="cars_tables-tbody">
-                        <div class="cars_tables-tbody_item" th:each="car:${carList}">
+                    <div class="cars_tables-tbody" th:each="car:${carList}">
+                        <form th:action="@{/generate-pdf/{id}(id=${car.id})}" method="post" class="cars_tables-tbody_item">
                             <div class="cars_tables-tbody-checkboxes">
-                                <input type="checkbox" class="cars_tables-tbody-checkbox">
+                                <input type="checkbox" class="cars_tables-tbody-checkbox" th:value="${car.id}" name="carId">
                             </div>
                             <div class="cars_tables-tbody-tr">
                                 <a th:href="@{/cars/{id}(id=${car.id})}" class="cars_tables-tbody-href">
@@ -126,7 +131,10 @@
                                     </div>
                                 </a>
                             </div>
-                        </div>
+                            <button type="submit" class="cars_list_pdf-btn">作成</button>
+                            <input type="hidden" name="id" th:value="${car.id}">
+                            <input type="hidden" th:if="${priceCardName}" name="priceCardName" th:value="${priceCardName}">
+                        </form>
 
                     </div>
                 </div>
@@ -151,13 +159,21 @@
     <script>
         const allCheckBox = document.getElementById("cars_tables-allcheckbox");
         const checks = document.querySelectorAll(".cars_tables-tbody-checkbox");
+        const checksHidden = document.querySelectorAll(".cars_tables-tbody-checkbox-hidden");
 
         allCheckBox.addEventListener("click", () => {
            for (let i = 0; i < checks.length; i++) {
             checks[i].checked = allCheckBox.checked;
+            checksHidden[i].checked = allCheckBox.checked;
            }
         });
 
+
+        for (let i = 0; i < checks.length; i++) {
+            checks[i].addEventListener("click", () => {
+                checksHidden[i].checked = checks[i].checked;
+            });
+        }
 
     </script>
 </body>

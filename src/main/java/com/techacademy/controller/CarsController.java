@@ -264,7 +264,7 @@ public class CarsController {
         }
     }
 
-    @GetMapping("/generate-pdf")
+    @PostMapping("/generate-pdf")
     public ResponseEntity<InputStreamResource> generatePdf(Model model) throws IOException {
         System.out.println("test");
         // テンプレートエンジンにデータを渡す
