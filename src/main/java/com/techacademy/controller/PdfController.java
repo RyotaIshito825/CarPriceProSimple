@@ -1,25 +1,20 @@
 package com.techacademy.controller;
 
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.Writer;
-import java.nio.file.FileSystems;
-import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.thymeleaf.TemplateEngine;
-import org.thymeleaf.context.Context;
 
 import com.techacademy.entity.Car;
 import com.techacademy.service.CarService;
 import com.techacademy.service.PdfService;
+
+import jakarta.servlet.http.HttpServletRequest;
 
 @Controller
 public class PdfController {
@@ -36,17 +31,23 @@ public class PdfController {
         this.carService = carService;
     }
 
-    @PostMapping("/generate-pdf/{id}")
-    public String generatePdf(String priceCardName, Integer id, Model model) {
+    @GetMapping("/generate-pdf")
+    public String generatePdf(HttpServletRequest req, String priceCardName, Integer id, Model model) {
 
-        System.out.println("test test");
+
+        String pdfUrl = req.getRequestURL() + "?" + req.getQueryString();
+        System.out.println(pdfUrl);
+
         if (priceCardName == null) {
             return "redirect:/cars";
         }
 
+        List<Car> carList = new ArrayList<>();
         Car car = carService.findById(id);
+        carList.add(car);
 
-        model.addAttribute("car", car);
+        model.addAttribute("carList", carList);
+
         int carPrice = Integer.parseInt(String.valueOf(car.getPrice()) + String.valueOf(car.getPriceDpf()));
         int carTotalPrice = Integer.parseInt(String.valueOf(car.getTotalPrice()) + String.valueOf(car.getTotalPriceDpf()));
 
@@ -61,58 +62,60 @@ public class PdfController {
         return "/pricecards/pricecard1";
     }
 
-    @PostMapping("/generate-pdfs")
-    public String generatePdfLists(@RequestParam(name = "carIds", required = false) List<String> carIds, String priceCardName, Model model) {
+    @GetMapping("/generate-pdfs")
+    public String generatePdfLists(@RequestParam(name = "id", required = false) List<String> id,
+            @RequestParam(name = "option") String option,
+            HttpServletRequest req, String priceCardName, Model model) {
+
+        System.out.println(option);
+
+        if (id == null) {
+            return "redirect:/cars";
+        }
 
         if (priceCardName == null) {
-            return "redirect:cars";
+            return "redirect:/cars";
         }
 
-        for (String carId : carIds) {
-            generatePdf(priceCardName, Integer.parseInt(carId), model);
-            System.out.println(carId);
+        if (option.equals("create") || option.equals("pdf作成")) {
+            for (String carId : id) {
+                generatePdf(req, priceCardName, Integer.parseInt(carId), model);
+                System.out.println("cardId : " + carId);
+            }
+
+            List<Car> carList = new ArrayList<>();
+            List<Integer> calcPriceOfIntList = new ArrayList<>();
+            List<Integer> calcPriceOfDpfList = new ArrayList<>();
+
+            for (String carId : id) {
+                Car car = carService.findById(Integer.parseInt(carId));
+                carList.add(car);
+
+                int carPrice = Integer.parseInt(String.valueOf(car.getPrice()) + String.valueOf(car.getPriceDpf()));
+                int carTotalPrice = Integer.parseInt(String.valueOf(car.getTotalPrice()) + String.valueOf(car.getTotalPriceDpf()));
+
+                int calcPrice = carTotalPrice - carPrice;
+
+                Integer calcPriceOfInt = Integer.parseInt(String.valueOf(calcPrice).substring(0, String.valueOf(calcPrice).length() - 1));
+                Integer calcPriceOfDpf = Integer.parseInt(String.valueOf(calcPrice).substring(String.valueOf(calcPrice).length() - 1, String.valueOf(calcPrice).length()));
+
+                calcPriceOfIntList.add(calcPriceOfInt);
+                calcPriceOfDpfList.add(calcPriceOfDpf);
+            }
+            model.addAttribute("carList", carList);
+
+            model.addAttribute("calcPriceOfIntList", calcPriceOfIntList);
+            model.addAttribute("calcPriceOfDpfList", calcPriceOfDpfList);
+
+            return "/pricecards/pricecard1";
+        } else {
+
+            System.out.println("create 以外");
+            return "redirect:/cars";
         }
 
-
-        System.out.println(carIds);
-        return "redirect:/cars";
     }
 
-//    @GetMapping("/generateAndSave")
-//    public String generateAndSaveHtml(String maker) {
-//        Context context = new Context();
-//        context.setVariable("maker", maker);
-//
-//        String htmlContent = templateEngine.process("pricecard1", context);
-//        htmlContent = htmlContent.replace("</head>", "<link rel=\"stylesheet\" href=\"/css/style.css\">" + "</head>");
-//
-//        Path currentDirectoryPath = FileSystems.getDefault().getPath("");
-//        String currentDirectoryName = currentDirectoryPath.toAbsolutePath().toString();
-//
-//        System.out.println("currentDirectoryName : " + currentDirectoryName);
-//
-//        try {
-//            File file = new File("src/main/resources/templates/pricecards/generated-file.html");
-////            File file = new File("generated-file.html");
-//
-//            file.getParentFile().mkdirs();
-//            Writer writer = new FileWriter(file);
-//            writer.write(htmlContent);
-//            writer.close();
-//
-//
-//            if (file.exists()) {
-//                System.out.println("HTMLファイルは正常に保存されました: " + file.getAbsolutePath());
-//            } else {
-//                System.out.println("HTMLファイルの保存に失敗しました。");
-//            }
-//
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
-//
-//        return "redirect:/cars";
-//    }
 
     @GetMapping("/g")
     public String g() {

@@ -265,6 +265,7 @@
                 html2canvas(document.getElementById('content')).then(function(canvas) {
                     // Canvasを画像データに変換
                     const imgData = canvas.toDataURL('image/png');
+                    console.log(imgData);
 
                     // jsPDFを使ってPDFを作成
                     const { jsPDF } = window.jspdf;
@@ -291,6 +292,15 @@
                 }).catch(function(error) {
                     console.error("html2canvasのエラー:", error);
                 });
+            });
+
+            const ids = [1, 2, 3];
+            ids.forEach(id => {
+               const a = document.createElement('a');
+               a.href = `/generate-pdf?id=${id}&priceCardName=template_image-1`;
+               a.download = `pricecard_${id}.pdf`;
+               a.target = '_blank';
+               a.click();
             });
         </script>
 

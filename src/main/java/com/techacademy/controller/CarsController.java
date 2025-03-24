@@ -82,7 +82,12 @@ public class CarsController {
 
     // 車両一覧画面表示
     @GetMapping
-    public String top(Model model) {
+    public String top(String keyword, Model model) {
+
+        if (keyword != null) {
+            System.out.println(keyword);
+            model.addAttribute("keyword", keyword);
+        }
 
         List<Car> cars = carService.findAll();
         model.addAttribute("carList", cars);
@@ -218,7 +223,8 @@ public class CarsController {
                 if (row.get(0).equals("") || row.get(1).equals("") || row.get(2).equals("") || row.get(3).equals("")
                         || row.get(4).equals("") || row.get(5).equals("") || row.get(9).equals("")
                         || row.get(10).equals("") || row.get(11).equals("") || row.get(12).equals("")
-                        || row.get(13).equals("") || row.get(14).equals("")) {
+                        || row.get(13).equals("") || row.get(14).equals("")
+                        || row.get(15).equals("") || row.get(16).equals("")) {
                     continue;
                 }
                 Car car = new Car();
@@ -247,7 +253,9 @@ public class CarsController {
                 car.setPriceDpf(Integer.parseInt(String.valueOf(row.get(11))));
                 car.setTotalPrice(Integer.parseInt(String.valueOf(row.get(12))));
                 car.setTotalPriceDpf(Integer.parseInt(String.valueOf(row.get(13))));
-                car.setMileage(Integer.parseInt(String.valueOf(row.get(14))));
+                car.setCalcPriceOfInt(Integer.parseInt(String.valueOf(row.get(14))));
+                car.setCalcPriceOfDpf(Integer.parseInt(String.valueOf(row.get(15))));
+                car.setMileage(Integer.parseInt(String.valueOf(row.get(16))));
 
                 ErrorKinds result = carService.createCar(car);
                 if (result == ErrorKinds.SUCCESS) {
@@ -263,66 +271,6 @@ public class CarsController {
             return "/cars/intake";
         }
     }
-
-    @PostMapping("/generate-pdf")
-    public ResponseEntity<InputStreamResource> generatePdf(Model model) throws IOException {
-        System.out.println("test");
-        // テンプレートエンジンにデータを渡す
-        Context context = new Context();
-//        context.setVariable("message", "こんにちは、PDFBox!");
-
-        // HTMLを生成
-        String html = templateEngine.process("pricecard1", context);
-        System.out.println(html);
-
-        // HTMLをPDFに変換
-        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-        PdfRendererBuilder builder = new PdfRendererBuilder();
-
-        builder.withHtmlContent(html, null);
-
-        builder.useFont(() -> getClass().getResourceAsStream("/fonts/NotoSansJP-Regular.ttf"), "Noto Sans CJK JP");
-        builder.toStream(outputStream);
-        builder.run();
-
-        ByteArrayInputStream inputStream = new ByteArrayInputStream(outputStream.toByteArray());
-
-        HttpHeaders headers = new HttpHeaders();
-        headers.add("Content-Disposition", "inline; filename=example.pdf");
-
-        return ResponseEntity.ok()
-                .headers(headers)
-                .contentType(MediaType.APPLICATION_PDF)
-                .body(new InputStreamResource(inputStream));
-    }
-
-//    @PostMapping("/generateAndSave")
-//    @ResponseBody
-//    public String generateAndSavePdf(String priceCardName, Model model) throws Exception {
-//
-//        if (priceCardName == null) {
-//            return "redirect:/cars";
-//        }
-//
-//        System.out.println(priceCardName);
-//        String priceCardNameNum = priceCardName.substring(priceCardName.lastIndexOf("-") + 1);
-//        System.out.println(priceCardNameNum);
-//
-////        model.addAttribute("maker", "ダイハツ");
-//
-//        byte[] pdfContent = pdfGenerationService.generatePdfFromTemplate("pricecard1.html", model);
-//        String outputPath = "/path/to/save/directory/" + priceCardName + ".pdf";
-//
-//        pdfGenerationService.savePdfToFile(pdfContent, outputPath);
-//
-//
-//
-//
-//
-//        return "redirect:/cars";
-//
-////        return "/pricecards/pricecard" + priceCardNameNum;
-//    }
 
     // GoogleSpreadSheetのURLからIDを取得
     public static String getSpreadSheetId(String spreadSheetUrl) {
