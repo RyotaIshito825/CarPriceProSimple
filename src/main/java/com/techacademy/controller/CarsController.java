@@ -1,7 +1,6 @@
 package com.techacademy.controller;
 
 import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -15,10 +14,9 @@ import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.usermodel.WorkbookFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.InputStreamResource;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -30,7 +28,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
-import org.thymeleaf.context.Context;
 import org.thymeleaf.spring6.SpringTemplateEngine;
 
 import com.google.api.client.googleapis.javanet.GoogleNetHttpTransport;
@@ -47,7 +44,6 @@ import com.google.api.services.sheets.v4.model.ValueRange;
 import com.google.auth.http.HttpCredentialsAdapter;
 import com.google.auth.oauth2.GoogleCredentials;
 import com.google.auth.oauth2.ServiceAccountCredentials;
-import com.openhtmltopdf.pdfboxout.PdfRendererBuilder;
 import com.techacademy.constants.ErrorKinds;
 import com.techacademy.constants.ErrorMessage;
 import com.techacademy.entity.Car;
@@ -81,16 +77,43 @@ public class CarsController {
     }
 
     // 車両一覧画面表示
-    @GetMapping
-    public String top(String keyword, Model model) {
+//    @GetMapping
+    @GetMapping(value = "/list")
+    public String top(@PageableDefault(page = 0, size = 8) Pageable pageable, String keyword, Integer minPrice, Integer maxPrice, Model model) {
 
         if (keyword != null) {
-            System.out.println(keyword);
+            int min_price  = (minPrice != null) ? minPrice : 0;
+            int max_price = (maxPrice != null) ? maxPrice : 9999;
+            Page<Car> cars = carService.findByKeyword(keyword, min_price, max_price, pageable);
             model.addAttribute("keyword", keyword);
+            if (minPrice != null && minPrice != 0) {
+                model.addAttribute("minPrice", min_price);
+            }
+            if (maxPrice != null && maxPrice != 9999) {
+                model.addAttribute("maxPrice", max_price);
+            }
+
+            PriceCard priceCard = priceCardService.findByEmployeeId(1);
+
+            if (priceCard == null) {
+                model.addAttribute("priceCardName", "選択されていません");
+            } else {
+                model.addAttribute("priceCardName", priceCard.getPriceCardName());
+            }
+
+            Page<Car> carPage = carService.getCars(pageable);
+            model.addAttribute("page", carPage);
+            model.addAttribute("carList", cars);
+//            model.addAttribute("carList", cars);
+            return "cars/list";
         }
 
-        List<Car> cars = carService.findAll();
+//        List<Car> cars = carService.findAll();
+        Page<Car> carPage = carService.getCars(pageable);
+        Page<Car> cars = carService.getCars(pageable);
+        model.addAttribute("page", carPage);
         model.addAttribute("carList", cars);
+//        model.addAttribute("carList", cars);
 
         PriceCard priceCard = priceCardService.findByEmployeeId(1);
         if (priceCard != null) {
@@ -123,16 +146,27 @@ public class CarsController {
     @PostMapping(value = "/add")
     public String add(@Validated Car car, BindingResult res, Model model) {
 
+        Car newCar = car;
+        int carPrice = Integer.parseInt(String.valueOf(car.getPrice()) + String.valueOf(car.getPriceDpf()));
+        int carTotalPrice = Integer.parseInt(String.valueOf(car.getTotalPrice()) + String.valueOf(car.getTotalPriceDpf()));
+
+        int calcPrice = carTotalPrice - carPrice;
+
+        int calcPriceOfInt = Integer.parseInt(String.valueOf(calcPrice).substring(0, String.valueOf(calcPrice).length() - 1));
+        int calcPriceOfDpf = Integer.parseInt(String.valueOf(calcPrice).substring(String.valueOf(calcPrice).length() - 1, String.valueOf(calcPrice).length()));
+
+        System.out.println(res);
+
         if (res.hasErrors()) {
-            model.addAttribute("car", car);
+            model.addAttribute("car", newCar);
             return "cars/new";
         }
 
-        ErrorKinds result = carService.createCar(car);
+        ErrorKinds result = carService.createCar(newCar);
         if (result == ErrorKinds.SUCCESS) {
-            carService.createCarSave(car);
+            carService.createCarSave(newCar);
         }
-        return "redirect:/cars";
+        return "redirect:/cars/list";
     }
 
     // 車両更新画面表示
@@ -146,24 +180,35 @@ public class CarsController {
     // 車両更新処理
     @PostMapping(value = "/{id}/update")
     public String update(@Validated Car car, BindingResult res, Model model) {
+        Car updateCar = car;
+        int carPrice = Integer.parseInt(String.valueOf(car.getPrice()) + String.valueOf(car.getPriceDpf()));
+        int carTotalPrice = Integer.parseInt(String.valueOf(car.getTotalPrice()) + String.valueOf(car.getTotalPriceDpf()));
+
+        int calcPrice = carTotalPrice - carPrice;
+
+        int calcPriceOfInt = Integer.parseInt(String.valueOf(calcPrice).substring(0, String.valueOf(calcPrice).length() - 1));
+        int calcPriceOfDpf = Integer.parseInt(String.valueOf(calcPrice).substring(String.valueOf(calcPrice).length() - 1, String.valueOf(calcPrice).length()));
+
+        updateCar.setCalcPriceOfInt(calcPriceOfInt);
+        updateCar.setCalcPriceOfDpf(calcPriceOfDpf);
 
         if (res.hasErrors()) {
-            model.addAttribute("car", car);
+            model.addAttribute("car", updateCar);
             return "cars/edit";
         }
 
-        ErrorKinds result = carService.updateCar(car);
+        ErrorKinds result = carService.updateCar(updateCar);
         if (result == ErrorKinds.SUCCESS) {
-            carService.updateCarSave(car);
+            carService.updateCarSave(updateCar);
         }
 
-        return "redirect:/cars";
+        return "redirect:/cars/list";
     }
 
     // 車両削除処理
     @PostMapping(value = "/delete")
     public String delete() {
-        return "redirect:/cars";
+        return "redirect:/cars/list";
     }
 
     // テンプレート一覧画面表示
@@ -187,7 +232,7 @@ public class CarsController {
             priceCard.setPriceCardName(priceCardName);
             priceCardService.save(priceCard);
         }
-        return "redirect:/cars";
+        return "redirect:/cars/list";
     }
 
     // データ取込画面表示
@@ -203,7 +248,7 @@ public class CarsController {
         if (file != null && !file.isEmpty()) {
             registerExcelFileDataVehicle(file);
             if (url.isEmpty()) {
-                return "redirect:/cars";
+                return "redirect:/cars/list";
             }
         }
 
@@ -263,7 +308,7 @@ public class CarsController {
                 }
             }
 
-            return "redirect:/cars";
+            return "redirect:/cars/list";
 
         } catch (GoogleJsonResponseException e) { // スプレッドシートの権限エラー処理
 
@@ -409,7 +454,9 @@ public class CarsController {
                         || row.getCell(11).getCellType() == CellType.BLANK
                         || row.getCell(12).getCellType() == CellType.BLANK
                         || row.getCell(13).getCellType() == CellType.BLANK
-                        || row.getCell(14).getCellType() == CellType.BLANK) {
+                        || row.getCell(14).getCellType() == CellType.BLANK
+                        || row.getCell(15).getCellType() == CellType.BLANK
+                        || row.getCell(16).getCellType() == CellType.BLANK) {
                     continue;
                 }
                 car.setMaker(String.valueOf(row.getCell(4)));
@@ -437,7 +484,17 @@ public class CarsController {
                 car.setPriceDpf((int) Double.parseDouble(String.valueOf(row.getCell(11))));
                 car.setTotalPrice((int) Double.parseDouble(String.valueOf(row.getCell(12))));
                 car.setTotalPriceDpf((int) Double.parseDouble(String.valueOf(row.getCell(13))));
-                car.setMileage((int) Double.parseDouble(String.valueOf(row.getCell(14))));
+
+                int carPrice = Integer.parseInt(String.valueOf((int)(Double.parseDouble(String.valueOf(row.getCell(10))))) + String.valueOf((int)(Double.parseDouble(String.valueOf(row.getCell(11))))));
+                int carTotalPrice = Integer.parseInt(String.valueOf((int)(Double.parseDouble(String.valueOf(row.getCell(12))))) + String.valueOf((int)(Double.parseDouble(String.valueOf(row.getCell(13))))));
+                int calcPrice = carTotalPrice - carPrice;
+
+                Integer calcPriceOfInt = Integer.parseInt(String.valueOf(calcPrice).substring(0, String.valueOf(calcPrice).length() - 1));
+                Integer calcPriceOfDpf = Integer.parseInt(String.valueOf(calcPrice).substring(String.valueOf(calcPrice).length() - 1, String.valueOf(calcPrice).length()));
+
+                car.setCalcPriceOfInt(calcPriceOfInt);
+                car.setCalcPriceOfDpf(calcPriceOfDpf);
+                car.setMileage((int) Double.parseDouble(String.valueOf(row.getCell(16))));
 
                 ErrorKinds result = carService.createCar(car);
                 if (result == ErrorKinds.SUCCESS) {

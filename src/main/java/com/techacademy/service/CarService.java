@@ -3,6 +3,8 @@ package com.techacademy.service;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -31,6 +33,12 @@ public class CarService {
         // 取得できなかった場合はnullを返す
         Car car = option.orElse(null);
         return car;
+    }
+
+    // 車両をキーワード検索
+    public Page<Car> findByKeyword(String keyword, int price1, int price2, Pageable pageable) {
+        Page<Car> carList = carRepository.searchByKeyword(keyword, price1, price2, pageable);
+        return carList;
     }
 
     // 車両情報更新
@@ -78,6 +86,10 @@ public class CarService {
     // 車両新規登録処理
     public void createCarSave(Car car) {
         carRepository.save(car);
+    }
+
+    public Page<Car> getCars(Pageable pageable) {
+        return carRepository.findAll(pageable);
     }
 
 }

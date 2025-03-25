@@ -4,7 +4,6 @@
 
 <body th:style="|background-image: url(@{/img/background-image.jpg});|"> <!-- 冒頭と末尾に|を入れるのを忘れないで-->
 
-    <!-- <div class="card" id="content" th:if="${car} != null" th:object="${car}"> -->
     <div class="card" th:each="car : ${carList}">
         <div class="content" id="content">
             <!-- 社名部分 -->
@@ -68,7 +67,7 @@
                         <div class="recycles-text recycles-text2">★リサイクル料金</div>
                         <div class="depositeds">
                             <div class="depositeds-wrapper">
-                                <input type="checkbox" class="deposited" name="" value="" >
+                                <input type="checkbox" class="deposited" name="" value="" checked>
                                 <div class="deposited-text">預託済み</div>
                             </div>
                             <div class="depositeds-attached">
@@ -127,14 +126,14 @@
                             <div class="maintenances-title">定期点検整備の有無</div>
                             <div class="with-maintenances">
                                 <div class="with-maintenances-checkboxes">
-                                    <input type="checkbox" class="with-maintenance" name="" value="">
+                                    <input type="checkbox" class="with-maintenance" name="" value="" th:checked="${car.classification.value == '中古車'}">
                                     <div class="with-maintenance-text">定期点検整備付</div>
                                 </div>
                                 <div class="with-maintenances-note">整備費用は車両価格に含みます。<br>★「点検整備記録簿」が交付されます。</div>
                             </div>
                             <div class="no-maintenances">
                                 <div class="no-maintenances-checkboxes">
-                                    <input type="checkbox" class="no-maintenance" name="" value="">
+                                    <input type="checkbox" class="no-maintenance" name="" value="" th:checked="${car.classification.value == '新車・未使用車'}">
                                     <div class="no-maintenance-text">定期点検整備なし</div>
                                 </div>
                             </div>

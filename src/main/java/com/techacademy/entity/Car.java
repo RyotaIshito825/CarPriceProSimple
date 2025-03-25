@@ -62,7 +62,7 @@ public class Car {
 
     // グレード
     @NotBlank(message = "値を入力してください")
-    @Size(max = 50, message = "50字以内で入力してください")
+    @Size(max = 20, message = "20字以内で入力してください")
     @Column(nullable = false)
     private String grade;
 
@@ -132,15 +132,15 @@ public class Car {
     private Integer totalPriceDpf;
 
     // 諸費用金額
-    @NotNull(message = "諸費用を入力してください")
-    @Max(value = 99, message = "諸費用が異常な桁数です。正しく入力してください")
-    @Column(length = 2, nullable = false)
+//    @NotNull(message = "諸費用を入力してください")
+    @Max(value = 999, message = "諸費用が異常な桁数です。正しく入力してください")
+    @Column(length = 2)
     private Integer calcPriceOfInt;
 
     // 諸費用金額の小数点
-    @NotNull(message = "諸費用の小数点第一を入力してください")
+//    @NotNull(message = "諸費用の小数点第一を入力してください")
     @Max(value = 9, message = "諸費用の小数点第一の桁は1桁のみ入力してください")
-    @Column(length = 1, nullable = false)
+    @Column(length = 1)
     private Integer calcPriceOfDpf;
 
     // 走行距離

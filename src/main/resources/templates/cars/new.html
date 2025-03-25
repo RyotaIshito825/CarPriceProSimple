@@ -135,6 +135,10 @@
                                                 <div class="" th:errors="*{totalPrice}"></div>
                                                 <div class="" th:errors="*{totalPriceDpf}"></div>
                                             </div>
+                                            <div style="display: none;">
+                                                <input type="hidden" th:field="*{calcPriceOfInt}">
+                                                <input type="hidden" th:field="*{calcPriceOfDpf}">
+                                            </div>
                                         </div>
                                     </div>
                                 </div>

@@ -34,12 +34,8 @@ public class PdfController {
     @GetMapping("/generate-pdf")
     public String generatePdf(HttpServletRequest req, String priceCardName, Integer id, Model model) {
 
-
-        String pdfUrl = req.getRequestURL() + "?" + req.getQueryString();
-        System.out.println(pdfUrl);
-
         if (priceCardName == null) {
-            return "redirect:/cars";
+            return "redirect:/cars/list";
         }
 
         List<Car> carList = new ArrayList<>();
@@ -58,6 +54,14 @@ public class PdfController {
 
         model.addAttribute("calcPriceOfInt", calcPriceOfInt);
         model.addAttribute("calcPriceOfDpf", calcPriceOfDpf);
+        if (car.getClassification().getValue().equals("新車・未使用車")) {
+            model.addAttribute("with", false);
+            model.addAttribute("none", true);
+        } else {
+            model.addAttribute("with", true);
+            model.addAttribute("none", false);
+        }
+
 
         return "/pricecards/pricecard1";
     }
@@ -67,20 +71,17 @@ public class PdfController {
             @RequestParam(name = "option") String option,
             HttpServletRequest req, String priceCardName, Model model) {
 
-        System.out.println(option);
-
         if (id == null) {
-            return "redirect:/cars";
+            return "redirect:/cars/list";
         }
 
         if (priceCardName == null) {
-            return "redirect:/cars";
+            return "redirect:/cars/list";
         }
 
         if (option.equals("create") || option.equals("pdf作成")) {
             for (String carId : id) {
                 generatePdf(req, priceCardName, Integer.parseInt(carId), model);
-                System.out.println("cardId : " + carId);
             }
 
             List<Car> carList = new ArrayList<>();
@@ -103,22 +104,12 @@ public class PdfController {
                 calcPriceOfDpfList.add(calcPriceOfDpf);
             }
             model.addAttribute("carList", carList);
-
             model.addAttribute("calcPriceOfIntList", calcPriceOfIntList);
             model.addAttribute("calcPriceOfDpfList", calcPriceOfDpfList);
 
             return "/pricecards/pricecard1";
         } else {
-
-            System.out.println("create 以外");
-            return "redirect:/cars";
+            return "redirect:/cars/list";
         }
-
-    }
-
-
-    @GetMapping("/g")
-    public String g() {
-        return "/pricecards/generated-file";
     }
 }
