@@ -5,7 +5,9 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
@@ -38,8 +40,11 @@ public class EmployeeController {
     }
 
     // ユーザー詳細画面表示
-    @GetMapping(value = "/{code}")
-    public String detail() {
+    @GetMapping(value = "/{id}")
+    public String detail(@PathVariable Integer id, Model model) {
+
+        Employee employee = employeeService.findById(id);
+        model.addAttribute("employee", employee);
         return "employees/detail";
     }
 
@@ -56,19 +61,23 @@ public class EmployeeController {
     }
 
     // ユーザー情報更新画面表示
-    @GetMapping(value = "/{code}/update")
-    public String edit() {
+    @GetMapping(value = "/{id}/update")
+    public String edit(@PathVariable Integer id, Model model) {
+        Employee employee = employeeService.findById(id);
+        model.addAttribute("employee", employee);
         return "employees/edit";
     }
 
     // ユーザー情報更新処理
-    @PostMapping(value = "/{code}/update")
-    public String update() {
+    @PostMapping(value = "/{id}/update")
+    public String update(@Validated Employee employee, Model model) {
+
+
         return "redirect:/employees";
     }
 
     // ユーザー削除処理
-    @PostMapping(value = "/{code}/delete")
+    @PostMapping(value = "/{id}/delete")
     public String delete() {
         return "redirect:/employees";
     }

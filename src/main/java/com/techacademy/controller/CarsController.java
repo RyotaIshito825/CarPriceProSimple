@@ -101,19 +101,15 @@ public class CarsController {
                 model.addAttribute("priceCardName", priceCard.getPriceCardName());
             }
 
-            Page<Car> carPage = carService.getCars(pageable);
-            model.addAttribute("page", carPage);
+            model.addAttribute("page", cars);
             model.addAttribute("carList", cars);
-//            model.addAttribute("carList", cars);
+
             return "cars/list";
         }
 
-//        List<Car> cars = carService.findAll();
-        Page<Car> carPage = carService.getCars(pageable);
         Page<Car> cars = carService.getCars(pageable);
-        model.addAttribute("page", carPage);
+        model.addAttribute("page", cars);
         model.addAttribute("carList", cars);
-//        model.addAttribute("carList", cars);
 
         PriceCard priceCard = priceCardService.findByEmployeeId(1);
         if (priceCard != null) {

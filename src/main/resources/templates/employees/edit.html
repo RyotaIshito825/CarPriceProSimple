@@ -9,11 +9,11 @@
         <div th:replace="common/side_bar :: side_bar"></div>
 
         <!-- メイン -->
-        <div class="content-mains">
+        <div class="content-mains" th:object="${employee}">
             <div class="content-mains_inner">
                 <div class="page_title">プロフィール情報更新</div>
 
-                <form action="" method="post" class="edit_profile-form">
+                <form th:action="@{/employees/{id}/update(id=${employee.id})}" method="post" class="edit_profile-form">
                     <div class="edit_profiles">
                         <div class="edit_profile_images">
                             <div class="edit_profile_images_inner">
@@ -29,14 +29,14 @@
                             <div class="edit_profile_tables-tr">
                                 <div class="edit_profile_tables-tr_inputs">
                                     <div class="edit_profile_tables-th">ID</div>
-                                    <div class="edit_profile_tables-code">1</div>
+                                    <div class="edit_profile_tables-code" th:text="*{id}"></div>
                                 </div>
                             </div>
                             <div class="edit_profile_tables-tr">
                                 <div class="edit_profile_tables-tr_inputs">
                                     <div class="edit_profile_tables-th edit-profile_tables-th-name">名前</div>
                                     <div class="edit_profile-tables-tr_input-wrapper">
-                                        <input type="text" name="" value="" class="edit_profile_tables-td edit-profile_tables-td-name">
+                                        <input type="text" th:field="*{name}" class="edit_profile_tables-td edit-profile_tables-td-name">
                                         <div class="errors">
                                             <div class="error_message error_message-name">20文字以内で入力してください。</div>
                                         </div>
@@ -48,7 +48,7 @@
                                 <div class="edit_profile_tables-tr_inputs">
                                     <div class="edit_profile_tables-th edit-profile_tables-th-department">職種</div>
                                     <div class="edit_profile-tables-tr_input-wrapper">
-                                        <input type="text" name="" value="" class="edit_profile_tables-td edit-profile_tables-td-department">
+                                        <input type="text" th:field="*{department}" class="edit_profile_tables-td edit-profile_tables-td-department">
                                         <div class="errors">
                                             <div class="error_message error_message-name">20文字以内で入力してください。</div>
                                         </div>
@@ -59,7 +59,7 @@
                                 <div class="edit_profile_tables-tr_inputs">
                                     <div class="edit_profile_tables-th edit-profile_tables-th-email">メールアドレス</div>
                                     <div class="edit_profile-tables-tr_input-wrapper">
-                                        <input type="email" name="" value="" class="edit_profile_tables-td edit-profile_tables-td-email">
+                                        <input type="email" th:field="*{email}" class="edit_profile_tables-td edit-profile_tables-td-email">
                                         <div class="errors">
                                             <div class="error_message">20文字以内で入力してください。</div>
                                         </div>

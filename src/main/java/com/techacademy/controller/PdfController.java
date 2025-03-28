@@ -67,8 +67,8 @@ public class PdfController {
     }
 
     @GetMapping("/generate-pdfs")
-    public String generatePdfLists(@RequestParam(name = "id", required = false) List<String> id,
-            @RequestParam(name = "option") String option,
+    public String generatePdfLists(@RequestParam(required = false) List<String> id,
+            @RequestParam String option,
             HttpServletRequest req, String priceCardName, Model model) {
 
         if (id == null) {
