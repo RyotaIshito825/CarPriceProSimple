@@ -13,6 +13,7 @@ public class ErrorMessage {
         private static final long serialVersionUID = 1L;
         {
             put(ErrorKinds.BLANK_ERROR, new ArrayList<String>(Arrays.asList("blankError", "値を入力してください")));
+            put(ErrorKinds.EMAIL_BLANK_ERROR, new ArrayList<String>(Arrays.asList("emailError", "メールアドレスを入力してください")));
             put(ErrorKinds.PASSWORD_BLANK_ERROR, new ArrayList<String>(Arrays.asList("passwordError", "値を入力してください")));
             put(ErrorKinds.PASSWORD_HALFSIZE_ERROR, new ArrayList<String>(Arrays.asList("passwordError", "パスワードは半角英数字のみで入力してください")));
 

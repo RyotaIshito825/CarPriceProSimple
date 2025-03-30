@@ -14,6 +14,7 @@
                 <div class="page_title">プロフィール情報更新</div>
 
                 <form th:action="@{/employees/{id}/update(id=${employee.id})}" method="post" class="edit_profile-form">
+                    <input type="hidden" th:field="*{role}">
                     <div class="edit_profiles">
                         <div class="edit_profile_images">
                             <div class="edit_profile_images_inner">
@@ -60,6 +61,17 @@
                                     <div class="edit_profile_tables-th edit-profile_tables-th-email">メールアドレス</div>
                                     <div class="edit_profile-tables-tr_input-wrapper">
                                         <input type="email" th:field="*{email}" class="edit_profile_tables-td edit-profile_tables-td-email">
+                                        <div class="errors">
+                                            <div class="error_message">20文字以内で入力してください。</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="edit_profile_tables-tr">
+                                <div class="edit_profile_tables-tr_inputs">
+                                    <div class="edit_profile_tables-th edit-profile_tables-th-password">パスワード</div>
+                                    <div class="edit_profile-tables-tr_input-wrapper">
+                                        <input type="password" name="password" class="edit_profile_tables-td edit-profile_tables-td-password">
                                         <div class="errors">
                                             <div class="error_message">20文字以内で入力してください。</div>
                                         </div>

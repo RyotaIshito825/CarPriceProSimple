@@ -7,6 +7,8 @@ public enum ErrorKinds {
     // エラー内容
     // 空白チェックエラー
     BLANK_ERROR,
+    // メール区白チェックエラー
+    EMAIL_BLANK_ERROR,
     // パスワード空白チェックエラー
     PASSWORD_BLANK_ERROR,
     // パスワード半角英数字チェックエラー

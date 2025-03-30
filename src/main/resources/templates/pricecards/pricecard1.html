@@ -255,7 +255,13 @@
                 </div>
             </div>
         </div>
-        <button id="downloadPdf" class="downloadPdf">PDFをダウンロード</button>
+        <div class="pricecard_btns mb-4">
+            <div class="pricecard_btns_inner">
+                <a th:href="@{/cars/template}" class="pricecard_other-btn">他のプライスボードのデザインを見る</a>
+                <a th:href="@{/cars/list}" class="pricecard_goto-cars_list">車両一覧へ戻る</a>
+                <button class="downloadPdf pricecard_downloadPdf" id="downloadPdf">PDFダウンロード</button>
+            </div>
+        </div>
     </div>
 
     <script>
