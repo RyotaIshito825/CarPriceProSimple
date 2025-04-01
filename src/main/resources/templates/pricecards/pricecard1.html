@@ -10,7 +10,7 @@
             <div class="headers">
                 <div class="header_left">
                     <div class="company-name-label">販売会社名：</div>
-                    <div class="company-name">〇〇会社〇〇店</div>
+                    <div class="company-name contenteditable" contenteditable="true">BUDDICA</div>
                 </div>
                 <div class="header_right">
                     <img th:src="@{../../img/HELLO.jpeg}" alt="" class="header_logo">
@@ -27,24 +27,24 @@
                 </div>
                 <div class="jcs">
                     <div class="jcs_inner">
-                        <div class="japanese_calendar" th:if="${car.firstJc}" th:text="${car.firstJc.value}"></div>
-                        <div class="registration_year" th:text="${car.registrationYear}"></div>
+                        <div class="japanese_calendar" th:if="${car.firstJc}" th:text="${car.firstJc.value}" contenteditable="true"></div>
+                        <div class="registration_year" th:text="${car.registrationYear}" contenteditable="true"></div>
                         <div class="jc-unit">年</div>
-                        <div class="registration_month" th:text="${car.registrationMonth}"></div>
+                        <div class="registration_month" th:text="${car.registrationMonth}" contenteditable="true"></div>
                         <div class="jc-unit">月</div>
                     </div>
                 </div>
                 <div class="models">
                     <div class="models_inner">
                         <div class="model-tags">車名：</div>
-                        <div class="maker" th:text="${car.maker}" style="margin-right: 10px;"></div>
-                        <div class="car_model" th:text="${car.carModel}"></div>
+                        <div class="maker" th:text="${car.maker}" style="margin-right: 10px;" contenteditable="true"></div>
+                        <div class="car_model" th:text="${car.carModel}" contenteditable="true"></div>
                     </div>
                 </div>
                 <div class="grades">
                     <div class="grades_inner">
                         <div class="grades-text">グレード・ミッション・排気量（主な仕様区分）</div>
-                        <div class="grade" th:text="${car.grade}"></div>
+                        <div class="grade" th:text="${car.grade}" contenteditable="true"></div>
                     </div>
                 </div>
             </div>
@@ -58,7 +58,7 @@
                 </div>
                 <div class="total-prices">
                     <div class="total-prices_inner">
-                        <div class="total-price" th:text="${car.totalPrice}"></div>
+                        <div class="total-price" th:text="${car.totalPrice}" contenteditable="true"></div>
                     </div>
                 </div>
                 <div class="recycles">
@@ -83,7 +83,7 @@
                     <div class="total-price_dots-wrapper">
                         <div class="total_price-dot_inner">
                             <div class="total-price-dot">⚫︎</div>
-                            <div class="total-price-dpf" th:text="${car.totalPriceDpf}"></div>
+                            <div class="total-price-dpf" th:text="${car.totalPriceDpf}" contenteditable="true"></div>
                         </div>
                         <div class="mains-uom_inner">
                             <div class="mains-uom">万円</div>
@@ -97,24 +97,30 @@
                 <div class="price-wrapper">
                     <div class="price-tag">車両価格</div>
                     <div class="prices">
-                        <div class="price" th:text="${car.price}"></div>
+                        <div class="price" th:text="${car.price}" contenteditable="true"></div>
                         <div class="price-dot">.</div>
-                        <div class="price-dpf" th:text="${car.priceDpf}"></div>
+                        <div class="price-dpf" th:text="${car.priceDpf}" contenteditable="true"></div>
                     </div>
                     <div class="price-uom">万円</div>
                 </div>
                 <div class="ohde-wrapper">
                     <div class="ohde-tag">諸費用</div>
                     <div class="ohdes">
-                        <div class="ohde" th:text="${car.calcPriceOfInt}"></div>
+                        <div class="ohde" th:text="${car.calcPriceOfInt}" contenteditable="true"></div>
                         <div class="ohde-dot">.</div>
-                        <div class="ohde-dpf" th:text="${car.calcPriceOfDpf}"></div>
+                        <div class="ohde-dpf" th:text="${car.calcPriceOfDpf}" contenteditable="true"></div>
                     </div>
                     <div class="ohde-uom">万円</div>
                 </div>
                 <div class="price-ohde-text">
-                    支払総額は<span class="price-ohde-month">12</span>月現在、<span class="price-ohde-city"><input class="price-card-city-input"></span>登録(届出)で店頭納車の場合の価格です。<br>
-                    お客様の要望に基づく整備やオプション等の費用は別途申し受けます。
+                    <div class="price-ohde-text-inner">
+                        <div>支払総額は</div>
+                        <div class="price-ohde-month" contenteditable="true">12</div>
+                        <div>月現在、</div>
+                        <div class="price-ohde-city" contenteditable="true"></div>
+                        <div>登録(届出)で店頭納車の場合の価格です。</div>
+                    </div>
+                    <div>お客様の要望に基づく整備やオプション等の費用は別途申し受けます。</div>
                 </div>
             </div>
             <!-- 整備・保障・車検等 -->
@@ -159,7 +165,7 @@
                                     <div class="guarantee-details-text">⚪️保証内容<span>※詳しくはスタッフにお尋ね下さい。</span></div>
                                     <div class="guarantee-details-contents">
                                         <div class="brackets-first">〔</div>
-                                        <div class="guarantee-details-content">部分保証</div>
+                                        <div class="guarantee-details-content" contenteditable="true">部分保証</div>
                                         <div class="brackets-end">〕</div>
                                     </div>
                                 </div>
@@ -168,9 +174,9 @@
                                     <div class="guarantee-period-contents">
                                         <div class="brackets-first">〔</div>
                                         <div class="guarantee-period-content">
-                                            <div class="guarantee-period">12</div>
+                                            <div contenteditable="true" class="guarantee-period">12</div>
                                             <div class="guarantee-period-text">ヵ月<span>又は</span></div>
-                                            <div class="guarantee-distance">10</div>
+                                            <div contenteditable="true" class="guarantee-distance">10</div>
                                             <div class="guarantee-distance-text">千<span>km</span></div>
                                         </div>
                                         <div class="brackets-end">〕</div>
@@ -191,22 +197,22 @@
                             <div class="tr vi_wrapper">
                                 <div class="th">車検証有効期限</div>
                                 <div class="td vi_jc_wrapper">
-                                    <div class="vi_jc" th:if="${car.viJc} != null" th:text="${car.viJc.value}"></div>
-                                    <div class="vi_year" th:if="${car.viYear} != null" th:text="${car.viYear}"></div>
+                                    <div class="vi_jc" th:if="${car.viJc} != null" th:text="${car.viJc.value}" contenteditable="true"></div>
+                                    <div class="vi_year" th:if="${car.viYear} != null" th:text="${car.viYear}" contenteditable="true"></div>
                                     <div class="vi_year-tag">年</div>
-                                    <div class="vi_month" th:if="${car.viMonth} != null" th:text="${car.viMonth}"></div>
+                                    <div class="vi_month" th:if="${car.viMonth} != null" th:text="${car.viMonth}" contenteditable="true"></div>
                                     <div class="vi_month-tag">月</div>
-                                    <div class="vi_day"><input class="price-card-vi-day"></div>
+                                    <div class="vi_day"><input class="price-card-vi-day" contenteditable="true"></div>
                                     <div class="vi_day-tag">日</div>
                                 </div>
                             </div>
                             <div class="tr mileage_tr">
                                 <div class="th">走行距離</div>
                                 <div class="td">
-                                    <div class="mileage_k-km" th:text="${T(java.lang.Math).ceil(car.mileage / 1000).intValue()}"></div>
+                                    <div class="mileage_k-km" th:text="${T(java.lang.Math).ceil(car.mileage / 1000).intValue()}" contenteditable="true"></div>
                                     <div class="mileage_k-km-tag">千<span>km</span></div>
                                     <div class="brackets-first">〔</div>
-                                    <div class="mileage_km" th:text="${car.mileage}"></div>
+                                    <div class="mileage_km" th:text="${car.mileage}" contenteditable="true"></div>
                                     <div class="mileage_km-tag">km</div>
                                     <div class="brackets-end">〕</div>
                                 </div>
@@ -230,7 +236,7 @@
                                 <div class="td">
                                     <div class="has_riamrb">有</div>
                                     <div class="brackets-first">〔</div>
-                                    <div class="riamrb_month">12</div>
+                                    <div class="riamrb_month" contenteditable="true">12</div>
                                     <div class="riamrb_month-tag">ヵ月</div>
                                     <div class="brackets-end">〕</div>
                                     <div class="riamrb_dot">・</div>
@@ -302,39 +308,17 @@
             });
         }
 
-         /* window.addEventListener('load', async () => {
-            html2canvas(document.getElementById('content')).then(function(canvas) {
-                // Canvasを画像データに変換
-                const imgData = canvas.toDataURL('image/png');
+        document.querySelectorAll('.contenteditable').forEach(e => {
+           e.addEventListener("focus", () => {
+            const range = document.createRange();
+            range.selectNodeContents(e);
+            const sel = window.getSelection();
+            sel.removeAllRanges();
+            sel.addRange(range);
+           });
+        });
 
-                // jsPDFを使ってPDFを作成
-                const { jsPDF } = window.jspdf;
-                const pdf = new jsPDF('landscape', 'mm', 'a4'); // A4 横向き
 
-                const imgWidth = canvas.width;
-                const imgHeight = canvas.height;
-
-                const pageWidth = 297;
-                const pageHeight = 210;
-
-                const ratio = Math.min(pageWidth / imgWidth, pageHeight / imgHeight);
-                const scaleWidth = imgWidth * ratio;
-                const scaleHeight = imgHeight * ratio;
-
-                const marginLeft = (pageWidth - scaleWidth) / 2;
-                const marginTop = (pageHeight - scaleHeight) / 2;
-
-                // PDFに画像を追加 (imgDataはCanvasから作成した画像データ)
-                pdf.addImage(imgData, 'PNG', marginLeft, marginTop, scaleWidth, scaleHeight); // 画像の位置とサイズを指定
-
-                // PDFをダウンロード
-                pdf.save('converted.pdf');
-            }).catch(function(error) {
-                console.error("html2canvasのエラー:", error);
-            });
-        }); */
-
-        // window.location.href = "/cars";
     </script>
 </body>
 </html>

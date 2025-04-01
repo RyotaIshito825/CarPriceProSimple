@@ -46,6 +46,10 @@ public class Employee {
     @Column(length = 255, nullable = false)
     private String password;
 
+    // 所属店舗
+    @Column(columnDefinition="VARCHAR(10)", nullable = false)
+    private String affiliatedStore;
+
     // 所属
     @Column(columnDefinition="VARCHAR(10)", nullable = false)
     private String department;
@@ -70,6 +74,4 @@ public class Employee {
     // OauthId
     @Column(columnDefinition="VARCHAR(50)")
     private String oauthId;
-
-
 }

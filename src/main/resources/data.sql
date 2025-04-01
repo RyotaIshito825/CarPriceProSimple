@@ -5,5 +5,5 @@ INSERT INTO car_price_pro.cars(maker,car_model,grade,classification,first_jc,reg
 INSERT INTO car_price_pro.cars(maker,car_model,grade,classification,first_jc,registration_year,registration_month,price,price_dpf,total_price,total_price_dpf,calc_price_of_int,calc_price_of_dpf,mileage)
     VALUES ("ホンダ","Nbox","4WD","USED","HEISEI",31,1,90,0,110,2,20,2,56789);
 
-INSERT INTO car_price_pro.employees(email, name, password, department, role, delete_flg, created_at, updated_at, oauth_id)
-    VALUES ("loveaomori.27@icloud.com", "石戸涼太", "$2a$10$k9dZ.pMYbICYJjDPfV.a1uwN1c9Rr2SMzlY7Bho2En8xmTdNqiXL.", "本社Web", "ADMIN", 0, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, "12345");
+INSERT INTO car_price_pro.employees(email, name, password, affiliated_store, department, role, delete_flg, created_at, updated_at, oauth_id)
+    VALUES ("loveaomori.27@icloud.com", "石戸涼太", "$2a$10$k9dZ.pMYbICYJjDPfV.a1uwN1c9Rr2SMzlY7Bho2En8xmTdNqiXL.","東バイパス店","本社Web", "ADMIN", 0, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, "12345");

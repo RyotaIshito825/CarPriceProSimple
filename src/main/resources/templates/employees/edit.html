@@ -58,6 +58,17 @@
                             </div>
                             <div class="edit_profile_tables-tr">
                                 <div class="edit_profile_tables-tr_inputs">
+                                    <div class="edit_profile_tables-th edit-profile_tables-th-department">所属店舗</div>
+                                    <div class="edit_profile-tables-tr_input-wrapper">
+                                        <input type="text" th:field="*{affiliatedStore}" class="edit_profile_tables-td edit-profile_tables-td-department">
+                                        <div class="errors">
+                                            <div class="error_message error_message-name">20文字以内で入力してください。</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="edit_profile_tables-tr">
+                                <div class="edit_profile_tables-tr_inputs">
                                     <div class="edit_profile_tables-th edit-profile_tables-th-email">メールアドレス</div>
                                     <div class="edit_profile-tables-tr_input-wrapper">
                                         <input type="email" th:field="*{email}" class="edit_profile_tables-td edit-profile_tables-td-email">
@@ -90,7 +101,7 @@
                                 </div>
                             </div>
                             <div class="edit_profile_edit-btns">
-                                <a href="" class="edit_profile_edit-btn">戻る</a>
+                                <a th:href="@{/employees/{id}(id=*{id})}" class="edit_profile_edit-btn">戻る</a>
                                 <button type="submit" class="edit_profile-update-btn">更新</button>
                             </div>
                         </div>

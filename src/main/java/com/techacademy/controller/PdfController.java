@@ -71,6 +71,11 @@ public class PdfController {
             @RequestParam String option,
             HttpServletRequest req, String priceCardName, Model model) {
 
+        if (option.equals("削除") || option.equals("delete")) {
+            System.out.println("削除");
+            carService.deleteByCar(id);
+        }
+
         if (id == null) {
             return "redirect:/cars/list";
         }

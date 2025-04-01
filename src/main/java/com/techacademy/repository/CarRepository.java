@@ -16,4 +16,5 @@ public interface CarRepository extends JpaRepository<Car, Integer>{
     Page<Car> searchByKeyword(@Param("keyword") String keyword, @Param("minPrice") int minPrice, @Param("maxPrice") int maxPrice, Pageable pageable);
 
     Page<Car> findAll(Pageable pageble);
+
 }

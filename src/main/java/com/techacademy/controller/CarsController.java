@@ -49,12 +49,15 @@ import com.techacademy.constants.ErrorMessage;
 import com.techacademy.entity.Car;
 import com.techacademy.entity.Car.Classification;
 import com.techacademy.entity.Car.JapaneseCalendar;
+import com.techacademy.repository.CarRepository;
 import com.techacademy.entity.Employee;
 import com.techacademy.entity.PriceCard;
 import com.techacademy.service.CarService;
 import com.techacademy.service.EmployeeService;
 //import com.techacademy.service.PdfGenerationService;
 import com.techacademy.service.PriceCardService;
+
+import jakarta.servlet.http.HttpServletRequest;
 
 @Controller
 @RequestMapping("cars")
@@ -77,7 +80,6 @@ public class CarsController {
     }
 
     // 車両一覧画面表示
-//    @GetMapping
     @GetMapping(value = "/list")
     public String top(@PageableDefault(page = 0, size = 8) Pageable pageable, String keyword, Integer minPrice, Integer maxPrice, Model model) {
 
@@ -108,8 +110,11 @@ public class CarsController {
         }
 
         Page<Car> cars = carService.getCars(pageable);
+        Employee employee = employeeService.findById(1);
+
         model.addAttribute("page", cars);
         model.addAttribute("carList", cars);
+        model.addAttribute("employee", employee);
 
         PriceCard priceCard = priceCardService.findByEmployeeId(1);
         if (priceCard != null) {
@@ -126,6 +131,8 @@ public class CarsController {
         Car car = carService.findById(id);
         boolean viExits = String.valueOf(car.getViYear()) == null ? false : true;
 
+        Employee employee = employeeService.findById(1);
+        model.addAttribute("employee", employee);
         model.addAttribute("viExits", viExits);
         model.addAttribute("car", car);
 
@@ -134,7 +141,9 @@ public class CarsController {
 
     // 車両新規登録
     @GetMapping(value = "/add")
-    public String create(@ModelAttribute Car car) {
+    public String create(@ModelAttribute Car car, Model model) {
+        Employee employee = employeeService.findById(1);
+        model.addAttribute("employee", employee);
         return "cars/new";
     }
 
@@ -151,7 +160,8 @@ public class CarsController {
         int calcPriceOfInt = Integer.parseInt(String.valueOf(calcPrice).substring(0, String.valueOf(calcPrice).length() - 1));
         int calcPriceOfDpf = Integer.parseInt(String.valueOf(calcPrice).substring(String.valueOf(calcPrice).length() - 1, String.valueOf(calcPrice).length()));
 
-        System.out.println(res);
+        newCar.setCalcPriceOfInt(calcPriceOfInt);
+        newCar.setCalcPriceOfDpf(calcPriceOfDpf);
 
         if (res.hasErrors()) {
             model.addAttribute("car", newCar);
@@ -162,6 +172,10 @@ public class CarsController {
         if (result == ErrorKinds.SUCCESS) {
             carService.createCarSave(newCar);
         }
+
+        Employee employee = employeeService.findById(1);
+        model.addAttribute("employee", employee);
+
         return "redirect:/cars/list";
     }
 
@@ -201,15 +215,12 @@ public class CarsController {
         return "redirect:/cars/list";
     }
 
-    // 車両削除処理
-    @PostMapping(value = "/delete")
-    public String delete() {
-        return "redirect:/cars/list";
-    }
-
     // テンプレート一覧画面表示
     @GetMapping(value = "/template")
-    public String template() {
+    public String template(Model model) {
+
+        Employee employee = employeeService.findById(1);
+        model.addAttribute("employee", employee);
         return "cars/template";
     }
 
@@ -233,7 +244,10 @@ public class CarsController {
 
     // データ取込画面表示
     @GetMapping(value = "/intake")
-    public String intake() {
+    public String intake(Model model) {
+
+        Employee employee = employeeService.findById(1);
+        model.addAttribute("employee", employee);
         return "cars/intake";
     }
 

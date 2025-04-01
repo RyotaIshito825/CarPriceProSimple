@@ -35,13 +35,7 @@
                 </a>
             </li>
             <li>
-                <a th:href="@{/cars/add}" style="" class="menu-list">
-                    <i class="fa-solid fa-file-pdf side-icon fa-lg"></i>
-                    <div>取込済車両一覧</div>
-                </a>
-            </li>
-            <li>
-                <a th:href="@{/cars/add}" style="" class="menu-list">
+                <a th:href="@{/employees/{id}(id=${employee.id})}" style="" class="menu-list">
                     <i class="fa-solid fa-user side-icon fa-lg"></i>
                     <div>プロフィール情報</div>
                 </a>
@@ -55,18 +49,18 @@
         </ul>
     </nav>
 
-    <div class="side_store-names">
-        <div class="side_store-name">〇〇〇〇店</div>
+    <div class="side_store-names" th:object="${employee}">
+        <div class="side_store-name" th:text="*{affiliatedStore}"></div>
     </div>
 
-    <div class="side_employee-profiles">
+    <div class="side_employee-profiles" th:object="${employee}">
         <div class="side_employee-profiles-inner">
             <div class="side_employee-profile-images">
                 <img src="./img/icons/profile-human.png" alt="">
             </div>
             <div class="side_employee-profile-names">
-                <div class="side_employee-profile-name">クルマ 太郎</div>
-                <div class="side_employee-profile-department">営業</div>
+                <div class="side_employee-profile-name" th:text="*{name}"></div>
+                <div class="side_employee-profile-department" th:text="*{department}">営業</div>
             </div>
         </div>
     </div>

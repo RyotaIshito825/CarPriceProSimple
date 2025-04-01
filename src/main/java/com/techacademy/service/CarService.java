@@ -88,6 +88,13 @@ public class CarService {
         carRepository.save(car);
     }
 
+    // 車両削除処理
+    public void deleteByCar(List<String> id) {
+        for (String carId : id) {
+            carRepository.deleteById(Integer.parseInt(carId));
+        }
+    }
+
     public Page<Car> getCars(Pageable pageable) {
         return carRepository.findAll(pageable);
     }

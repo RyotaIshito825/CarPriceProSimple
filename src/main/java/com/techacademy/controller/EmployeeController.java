@@ -37,6 +37,9 @@ public class EmployeeController {
             System.out.println(employee.getName());
         }
 
+        Employee employee = employeeService.findById(1);
+        model.addAttribute("employee", employee);
+
         model.addAttribute("employees", employees);
 
         return "employees/list";
