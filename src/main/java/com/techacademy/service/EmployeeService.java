@@ -106,4 +106,5 @@ public class EmployeeService {
     public ErrorKinds blankCheck(Employee employee) {
         return employee.getName().isEmpty() || employee.getEmail().isEmpty() || employee.getDepartment().isEmpty() ? ErrorKinds.BLANK_ERROR : ErrorKinds.CHECK_OK;
     }
+
 }

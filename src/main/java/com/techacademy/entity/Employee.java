@@ -47,11 +47,11 @@ public class Employee {
     private String password;
 
     // 所属店舗
-    @Column(columnDefinition="VARCHAR(10)", nullable = false)
+    @Column(columnDefinition="VARCHAR(10)")
     private String affiliatedStore;
 
     // 所属
-    @Column(columnDefinition="VARCHAR(10)", nullable = false)
+    @Column(columnDefinition="VARCHAR(10)")
     private String department;
 
     // 権限

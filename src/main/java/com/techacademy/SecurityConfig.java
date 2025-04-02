@@ -1,5 +1,6 @@
 package com.techacademy;
 
+import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -13,19 +14,23 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 
-        http
-        .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/login", "/css/**", "/js/**").permitAll()
-                .anyRequest().authenticated()
-        )
-        .formLogin(login -> login.loginProcessingUrl("/login")
+        http.formLogin(login -> login.loginProcessingUrl("/login")
                 .loginPage("/login")
                 .usernameParameter("email")
                 .defaultSuccessUrl("/")
                 .failureUrl("/login?error")
                 .permitAll()
-        ).logout(logout -> logout.logoutSuccessUrl("/login"));
-
+        ).logout(logout -> logout.logoutSuccessUrl("/login")
+        ).authorizeHttpRequests(auth -> auth
+                .requestMatchers("/login/createAccount").permitAll()
+                .requestMatchers("/login/**", "/css/**", "/js/**", "/img/**").permitAll()
+                .requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll()
+                .anyRequest().authenticated()
+        );
+//        ).oauth2Login(oauth2 -> oauth2
+//                .loginPage("/login")
+//                .defaultSuccessUrl("/cars/list", true)
+//                .permitAll());
 
 
 

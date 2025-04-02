@@ -1,5 +1,7 @@
 package com.techacademy.controller;
 
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.oauth2.core.oidc.user.OidcUser;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 
@@ -10,8 +12,24 @@ public class TopController {
 
     }
 
+    // ログイン画面表示
     @GetMapping(value = "/login")
-    public String login() {
+    public String login(@AuthenticationPrincipal OidcUser oidcUser) {
+
+        System.out.println(oidcUser);
+
         return "login/login";
+    }
+
+    // ログイン後のトップページ表示
+    @GetMapping(value = "/")
+    public String top() {
+        return "redirect:/cars/list";
+    }
+
+    // アカウント新規登録画面
+    @GetMapping(value = "/login/createAccount")
+    public String create() {
+        return "login/create_account";
     }
 }

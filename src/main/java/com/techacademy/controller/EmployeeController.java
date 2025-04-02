@@ -3,6 +3,9 @@ package com.techacademy.controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -22,11 +25,17 @@ import com.techacademy.service.EmployeeService;
 public class EmployeeController {
 
     private final EmployeeService employeeService;
+//    private final PasswordEncoder passwordEncoder;
 
     @Autowired
     public EmployeeController(EmployeeService employeeService) {
         this.employeeService = employeeService;
     }
+
+//    @Bean
+//    PasswordEncoder passwordEncoder() {
+//        return new BCryptPasswordEncoder();
+//    }
 
     // ユーザー一覧画面表示
     @GetMapping
@@ -71,6 +80,9 @@ public class EmployeeController {
     public String edit(@PathVariable Integer id, Model model) {
         Employee employee = employeeService.findById(id);
         model.addAttribute("employee", employee);
+
+        System.out.println(employee.getPassword());
+
         return "employees/edit";
     }
 
