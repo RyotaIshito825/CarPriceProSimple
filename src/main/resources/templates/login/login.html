@@ -7,7 +7,7 @@
     <div class="logins">
         <div class="logins_inner">
             <div class="login_create-account-btns">
-                <a th:href="@{/login/createAccount}" class="login_create-account-btn">Create Account</a>
+                <a th:href="@{/login/create_account}" class="login_create-account-btn">Create Account</a>
             </div>
 
             <div class="login_sides">
@@ -32,7 +32,7 @@
                     <div class="login_page-have-accounts">
                         <div class="login_page-have-account">Don't have an account?</div>
                         <div class="login_page-create-account">
-                            <a href="" class="login_page-create-account-link">Create an account</a>
+                            <a th:href="@{/login/create_account}" class="login_page-create-account-link">Create an account</a>
                         </div>
                     </div>
 
@@ -73,7 +73,7 @@
                     <div class="login_page-forgot-passwords">
                         <div class="login_page-forgot-password-text">Forgot your password?</div>
                         <div class="login_page-forgot-password-links">
-                            <a href="" class="login_page-forgot-password-link">Password reset</a>
+                            <a th:href="@{/login/password_reset}" class="login_page-forgot-password-link">Password reset</a>
                         </div>
                     </div>
                 </div>

@@ -17,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -49,15 +50,13 @@ import com.techacademy.constants.ErrorMessage;
 import com.techacademy.entity.Car;
 import com.techacademy.entity.Car.Classification;
 import com.techacademy.entity.Car.JapaneseCalendar;
-import com.techacademy.repository.CarRepository;
 import com.techacademy.entity.Employee;
 import com.techacademy.entity.PriceCard;
 import com.techacademy.service.CarService;
 import com.techacademy.service.EmployeeService;
 //import com.techacademy.service.PdfGenerationService;
 import com.techacademy.service.PriceCardService;
-
-import jakarta.servlet.http.HttpServletRequest;
+import com.techacademy.service.UserDetail;
 
 @Controller
 @RequestMapping("cars")
@@ -81,7 +80,10 @@ public class CarsController {
 
     // 車両一覧画面表示
     @GetMapping(value = "/list")
-    public String top(@PageableDefault(page = 0, size = 8) Pageable pageable, String keyword, Integer minPrice, Integer maxPrice, Model model) {
+    public String top(@AuthenticationPrincipal UserDetail userDetail, @PageableDefault(page = 0, size = 8) Pageable pageable, String keyword, Integer minPrice, Integer maxPrice, Model model) {
+
+        Employee userDetailEmployee = employeeService.findByEmail(userDetail.getUsername());
+        model.addAttribute("userDetailEmployee", userDetailEmployee);
 
         if (keyword != null) {
             int min_price  = (minPrice != null) ? minPrice : 0;
@@ -141,9 +143,9 @@ public class CarsController {
 
     // 車両新規登録
     @GetMapping(value = "/add")
-    public String create(@ModelAttribute Car car, Model model) {
-        Employee employee = employeeService.findById(1);
-        model.addAttribute("employee", employee);
+    public String create(@AuthenticationPrincipal UserDetail userDetail, @ModelAttribute Car car, Model model) {
+        Employee userDetailEmployee = employeeService.findByEmail(userDetail.getUsername());
+        model.addAttribute("userDetailEmployee", userDetailEmployee);
         return "cars/new";
     }
 
@@ -181,7 +183,10 @@ public class CarsController {
 
     // 車両更新画面表示
     @GetMapping(value = "/{id}/update")
-    public String edit(@PathVariable Integer id, Model model) {
+    public String edit(@AuthenticationPrincipal UserDetail userDetail, @PathVariable Integer id, Model model) {
+        Employee userDetailEmployee = employeeService.findByEmail(userDetail.getUsername());
+        model.addAttribute("userDetailEmployee", userDetailEmployee);
+
         Car car = carService.findById(id);
         model.addAttribute("car", car);
         return "cars/edit";
@@ -217,7 +222,9 @@ public class CarsController {
 
     // テンプレート一覧画面表示
     @GetMapping(value = "/template")
-    public String template(Model model) {
+    public String template(@AuthenticationPrincipal UserDetail userDetail, Model model) {
+        Employee userDetailEmployee = employeeService.findByEmail(userDetail.getUsername());
+        model.addAttribute("userDetailEmployee", userDetailEmployee);
 
         Employee employee = employeeService.findById(1);
         model.addAttribute("employee", employee);
@@ -244,7 +251,9 @@ public class CarsController {
 
     // データ取込画面表示
     @GetMapping(value = "/intake")
-    public String intake(Model model) {
+    public String intake(@AuthenticationPrincipal UserDetail userDetail, Model model) {
+        Employee userDetailEmployee = employeeService.findByEmail(userDetail.getUsername());
+        model.addAttribute("userDetailEmployee", userDetailEmployee);
 
         Employee employee = employeeService.findById(1);
         model.addAttribute("employee", employee);

@@ -14,22 +14,23 @@ public class TopController {
 
     // ログイン画面表示
     @GetMapping(value = "/login")
-    public String login(@AuthenticationPrincipal OidcUser oidcUser) {
-
-        System.out.println(oidcUser);
+    public String login() {
 
         return "login/login";
     }
-
     // ログイン後のトップページ表示
     @GetMapping(value = "/")
     public String top() {
         return "redirect:/cars/list";
     }
-
     // アカウント新規登録画面
-    @GetMapping(value = "/login/createAccount")
+    @GetMapping(value = "/login/create_account")
     public String create() {
         return "login/create_account";
+    }
+    // パスワードリセット画面表示
+    @GetMapping(value = "/login/password_reset")
+    public String add() {
+        return "login/send_email";
     }
 }

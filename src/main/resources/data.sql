@@ -7,3 +7,6 @@ INSERT INTO car_price_pro.cars(maker,car_model,grade,classification,first_jc,reg
 
 INSERT INTO car_price_pro.employees(email, name, password, affiliated_store, department, role, delete_flg, created_at, updated_at, oauth_id)
     VALUES ("loveaomori.27@icloud.com", "石戸涼太", "$2a$10$u23WoTYZtPZIkzouGm6fDOQG/S2nRT98UXQ9R4mH3mRrBt/q0s/Xu","東バイパス店","本社Web", "ADMIN", 0, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, "12345");
+
+    INSERT INTO car_price_pro.employees(email, name, password, affiliated_store, department, role, delete_flg, created_at, updated_at, oauth_id)
+    VALUES ("ishito825@outlook.jp", "山田太郎", "$2a$10$u23WoTYZtPZIkzouGm6fDOQG/S2nRT98UXQ9R4mH3mRrBt/q0s/Xu","西バイパス店","本社Web", "ADMIN", 0, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, "12345");

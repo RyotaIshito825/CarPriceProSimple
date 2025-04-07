@@ -35,7 +35,7 @@
                 </a>
             </li>
             <li>
-                <a th:href="@{/employees/{id}(id=${employee.id})}" style="" class="menu-list">
+                <a th:href="@{/employees/{id}(id=${userDetailEmployee.id})}" style="" class="menu-list">
                     <i class="fa-solid fa-user side-icon fa-lg"></i>
                     <div>プロフィール情報</div>
                 </a>
@@ -49,11 +49,11 @@
         </ul>
     </nav>
 
-    <div class="side_store-names" th:object="${employee}">
+    <div class="side_store-names" th:object="${userDetailEmployee}">
         <div class="side_store-name" th:text="*{affiliatedStore}"></div>
     </div>
 
-    <div class="side_employee-profiles" th:object="${employee}">
+    <div class="side_employee-profiles" th:object="${userDetailEmployee}">
         <div class="side_employee-profiles-inner">
             <div class="side_employee-profile-images">
                 <img src="./img/icons/profile-human.png" alt="">

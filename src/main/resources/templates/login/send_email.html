@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="ja" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="common/header :: head_fragment(title = 'ユーザー新規登録完了')">
+
+<body style="position: relative;">
+
+    <div class="send_emails">
+        <div class="send_emails_inner">
+            <div class="send_emails-title">Send password reset email.</div>
+            <form action="" method="" class="send_emails_forms">
+                <input type="email" class="send_emails-input" placeholder="Email Address">
+                <div class="send_emails-btns">
+                    <div class="send_emails-btn-cancels">
+                        <a th:href="@{/login}" class="send_emails-btn-cancel">Cancel</a>
+                    </div>
+                    <div class="send_emails-btn-submits">
+                        <button type="submit" class="send_emails-btn-submit">Submit</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+</body>
+</html>

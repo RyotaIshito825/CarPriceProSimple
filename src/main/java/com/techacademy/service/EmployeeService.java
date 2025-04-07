@@ -36,6 +36,11 @@ public class EmployeeService {
         Employee employee = option.orElse(null);
         return employee;
     }
+    public Employee findByEmail(String email) {
+        Optional<Employee> option = employeeRepository.findByEmail(email);
+        Employee employee = option.orElse(null);
+        return employee;
+    }
 
     //従業員更新保存
     public void updateSaveEmployee(Employee employee) {
