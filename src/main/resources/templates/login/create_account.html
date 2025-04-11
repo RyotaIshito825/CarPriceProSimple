@@ -49,15 +49,18 @@
                     <div class="create_accounts_page-separator">- OR -</div>
 
                     <div class="create_accounts_account-signins">
-                        <form action="" class="create_accounts_account-signin-form">
+                        <form th:action="@{/login/create_account}" method="post" class="create_accounts_account-signin-form" th:object="${employee}">
                             <div class="create_accounts_account-signin-form-names">
-                                <input type="text" class="create_accounts_account-signin-name" placeholder="Full Name">
+                                <input type="text" class="create_accounts_account-signin-name" placeholder="Full Name" th:field="*{name}">
+                                <p th:if="${textError} neq null" th:text="${textError}" class="mb-1 text-danger"></p>
                             </div>
                             <div class="create_accounts_account-signin-form-emails">
-                                <input type="email" class="create_accounts_account-signin-email" placeholder="Email Address">
+                                <input type="email" class="create_accounts_account-signin-email" placeholder="Email Address" th:field="*{email}">
+                                <p th:if="${emailError} neq null" th:text="${emailError}" class="mb-1 text-danger"></p>
                             </div>
                             <div class="create_accounts_account-signin-form-passwords">
-                                <input type="password" class="create_accounts_account-signin-password" placeholder="Password">
+                                <input type="password" class="create_accounts_account-signin-password" placeholder="Password" th:field="*{password}">
+                                <p th:if="${passwordError} neq null" th:text="${passwordError}" class="mb-1 text-danger"></p>
                             </div>
 
                             <div class="create_accounts_account-signin-btns">
@@ -76,7 +79,7 @@
                     <div class="create_accounts_page-forgot-passwords" style="margin-top: 10px;">
                         <div class="create_accounts_page-forgot-password-text">Forgot your password?</div>
                         <div class="create_accounts_page-forgot-password-links">
-                            <a href="" class="create_accounts_page-forgot-password-link">Password reset</a>
+                            <a th:href="@{/login/password_reset}" class="create_accounts_page-forgot-password-link">Password reset</a>
                         </div>
                     </div>
                 </div>

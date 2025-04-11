@@ -18,6 +18,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.oauth2.core.oidc.user.OidcUser;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -80,10 +81,26 @@ public class CarsController {
 
     // 車両一覧画面表示
     @GetMapping(value = "/list")
-    public String top(@AuthenticationPrincipal UserDetail userDetail, @PageableDefault(page = 0, size = 8) Pageable pageable, String keyword, Integer minPrice, Integer maxPrice, Model model) {
+    public String top(@AuthenticationPrincipal OidcUser oidcUser, @AuthenticationPrincipal UserDetail userDetail, @PageableDefault(page = 0, size = 8) Pageable pageable, String keyword, Integer minPrice, Integer maxPrice, Model model) {
 
-        Employee userDetailEmployee = employeeService.findByEmail(userDetail.getUsername());
-        model.addAttribute("userDetailEmployee", userDetailEmployee);
+        Employee userEmployee = null;
+        if (oidcUser != null) {
+            System.out.println(oidcUser.getSubject());
+            System.out.println(oidcUser.getEmail());
+            System.out.println(oidcUser.getFullName());
+
+            System.out.println(oidcUser);
+
+            userEmployee = employeeService.findByOauthId(oidcUser.getSubject());
+//            model.addAttribute("userEmployee", userEmployee);
+            return "login/login";
+        }
+        if (userDetail != null) {
+            userEmployee = employeeService.findByEmail(userDetail.getUsername());
+//            model.addAttribute("userDetailEmployee", userDetailEmployee);
+            model.addAttribute("userEmployee", userEmployee);
+        }
+
 
         if (keyword != null) {
             int min_price  = (minPrice != null) ? minPrice : 0;
@@ -143,9 +160,18 @@ public class CarsController {
 
     // 車両新規登録
     @GetMapping(value = "/add")
-    public String create(@AuthenticationPrincipal UserDetail userDetail, @ModelAttribute Car car, Model model) {
-        Employee userDetailEmployee = employeeService.findByEmail(userDetail.getUsername());
-        model.addAttribute("userDetailEmployee", userDetailEmployee);
+    public String create(@AuthenticationPrincipal OidcUser oidcUser, @AuthenticationPrincipal UserDetail userDetail, @ModelAttribute Car car, Model model) {
+
+        Employee userEmployee = null;
+        if (oidcUser != null) {
+            userEmployee = employeeService.findByOauthId(oidcUser.getSubject());
+            model.addAttribute("userEmployee", userEmployee);
+        }
+        if (userDetail != null) {
+            userEmployee = employeeService.findByEmail(userDetail.getUsername());
+            model.addAttribute("userEmployee", userEmployee);
+        }
+
         return "cars/new";
     }
 
@@ -183,9 +209,17 @@ public class CarsController {
 
     // 車両更新画面表示
     @GetMapping(value = "/{id}/update")
-    public String edit(@AuthenticationPrincipal UserDetail userDetail, @PathVariable Integer id, Model model) {
-        Employee userDetailEmployee = employeeService.findByEmail(userDetail.getUsername());
-        model.addAttribute("userDetailEmployee", userDetailEmployee);
+    public String edit(@AuthenticationPrincipal OidcUser oidcUser, @AuthenticationPrincipal UserDetail userDetail, @PathVariable Integer id, Model model) {
+
+        Employee userEmployee = null;
+        if (oidcUser != null) {
+            userEmployee = employeeService.findByOauthId(oidcUser.getSubject());
+            model.addAttribute("userEmployee", userEmployee);
+        }
+        if (userDetail != null) {
+            userEmployee = employeeService.findByEmail(userDetail.getUsername());
+            model.addAttribute("userEmployee", userEmployee);
+        }
 
         Car car = carService.findById(id);
         model.addAttribute("car", car);
@@ -222,15 +256,22 @@ public class CarsController {
 
     // テンプレート一覧画面表示
     @GetMapping(value = "/template")
-    public String template(@AuthenticationPrincipal UserDetail userDetail, Model model) {
-        Employee userDetailEmployee = employeeService.findByEmail(userDetail.getUsername());
-        model.addAttribute("userDetailEmployee", userDetailEmployee);
+    public String template(@AuthenticationPrincipal OidcUser oidcUser, @AuthenticationPrincipal UserDetail userDetail, Model model) {
+
+        Employee userEmployee = null;
+        if (oidcUser != null) {
+            userEmployee = employeeService.findByOauthId(oidcUser.getSubject());
+            model.addAttribute("userEmployee", userEmployee);
+        }
+        if (userDetail != null) {
+            userEmployee = employeeService.findByEmail(userDetail.getUsername());
+            model.addAttribute("userEmployee", userEmployee);
+        }
 
         Employee employee = employeeService.findById(1);
         model.addAttribute("employee", employee);
         return "cars/template";
     }
-
     // テンプレート
     @PostMapping(value = "/template")
     public String confirmedTemplate(@RequestParam String priceCardName) {
@@ -251,9 +292,16 @@ public class CarsController {
 
     // データ取込画面表示
     @GetMapping(value = "/intake")
-    public String intake(@AuthenticationPrincipal UserDetail userDetail, Model model) {
-        Employee userDetailEmployee = employeeService.findByEmail(userDetail.getUsername());
-        model.addAttribute("userDetailEmployee", userDetailEmployee);
+    public String intake(@AuthenticationPrincipal OidcUser oidcUser, @AuthenticationPrincipal UserDetail userDetail, Model model) {
+        Employee userEmployee = null;
+        if (oidcUser != null) {
+            userEmployee = employeeService.findByOauthId(oidcUser.getSubject());
+            model.addAttribute("userEmployee", userEmployee);
+        }
+        if (userDetail != null) {
+            userEmployee = employeeService.findByEmail(userDetail.getUsername());
+            model.addAttribute("userEmployee", userEmployee);
+        }
 
         Employee employee = employeeService.findById(1);
         model.addAttribute("employee", employee);

@@ -4,6 +4,8 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.oauth2.core.oidc.user.OidcUser;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -24,47 +26,69 @@ import com.techacademy.service.UserDetail;
 public class EmployeeController {
 
     private final EmployeeService employeeService;
-//    private final PasswordEncoder passwordEncoder;
+    private final PasswordEncoder passwordEncoder;
 
     @Autowired
-    public EmployeeController(EmployeeService employeeService) {
+    public EmployeeController(EmployeeService employeeService, PasswordEncoder passwordEncoder) {
         this.employeeService = employeeService;
+        this.passwordEncoder = passwordEncoder;
     }
+
+
 
     // ユーザー一覧画面表示
     @GetMapping
-    public String list(@AuthenticationPrincipal UserDetail userDetail, Model model) {
+    public String list(@AuthenticationPrincipal OidcUser oidcUser, @AuthenticationPrincipal UserDetail userDetail, Model model) {
 
         List<Employee> employees = employeeService.findAll();
-        for (Employee employee : employees) {
-            System.out.println(employee.getName());
-        }
-
-        Employee userDetailEmployee = employeeService.findByEmail(userDetail.getUsername());
-        model.addAttribute("userDetailEmployee", userDetailEmployee);
         model.addAttribute("employees", employees);
+
+        Employee userEmployee = null;
+        if (oidcUser != null) {
+            userEmployee = employeeService.findByOauthId(oidcUser.getSubject());
+            model.addAttribute("userEmployee", userEmployee);
+        }
+        if (userDetail != null) {
+            userEmployee = employeeService.findByEmail(userDetail.getUsername());
+            model.addAttribute("userEmployee", userEmployee);
+        }
 
         return "employees/list";
     }
 
     // ユーザー詳細画面表示
     @GetMapping(value = "/{id}")
-    public String detail(@AuthenticationPrincipal UserDetail userDetail, @PathVariable Integer id, Model model) {
+    public String detail(@AuthenticationPrincipal OidcUser oidcUser, @AuthenticationPrincipal UserDetail userDetail, @PathVariable Integer id, Model model) {
+
+        Employee userEmployee = null;
+        if (oidcUser != null) {
+            userEmployee = employeeService.findByOauthId(oidcUser.getSubject());
+            model.addAttribute("userEmployee", userEmployee);
+        }
+        if (userDetail != null) {
+            userEmployee = employeeService.findByEmail(userDetail.getUsername());
+            model.addAttribute("userEmployee", userEmployee);
+        }
 
         Employee employee = employeeService.findById(id);
         model.addAttribute("employee", employee);
 
-        Employee userDetailEmployee = employeeService.findByEmail(userDetail.getUsername());
-        model.addAttribute("userDetailEmployee", userDetailEmployee);
         return "employees/detail";
     }
 
     // ユーザー新規登録画面
     @GetMapping(value = "/add")
-    public String create(@AuthenticationPrincipal UserDetail userDetail, Model model) {
-        Employee userDetailEmployee = employeeService.findByEmail(userDetail.getUsername());
-        model.addAttribute("userDetailEmployee", userDetailEmployee);
-        return "employees/create";
+    public String create(@AuthenticationPrincipal OidcUser oidcUser, @AuthenticationPrincipal UserDetail userDetail, Model model) {
+        Employee userEmployee = null;
+        if (oidcUser != null) {
+            userEmployee = employeeService.findByOauthId(oidcUser.getSubject());
+            model.addAttribute("userEmployee", userEmployee);
+        }
+        if (userDetail != null) {
+            userEmployee = employeeService.findByEmail(userDetail.getUsername());
+            model.addAttribute("userEmployee", userEmployee);
+        }
+        return "login/create_account";
     }
 
     // ユーザー新規登録処理
@@ -75,12 +99,20 @@ public class EmployeeController {
 
     // ユーザー情報更新画面表示
     @GetMapping(value = "/{id}/update")
-    public String edit(@AuthenticationPrincipal UserDetail userDetail, @PathVariable Integer id, Model model) {
+    public String edit(@AuthenticationPrincipal OidcUser oidcUser, @AuthenticationPrincipal UserDetail userDetail, @PathVariable Integer id, Model model) {
+
+        Employee userEmployee = null;
+        if (oidcUser != null) {
+            userEmployee = employeeService.findByOauthId(oidcUser.getSubject());
+            model.addAttribute("userEmployee", userEmployee);
+        }
+        if (userDetail != null) {
+            userEmployee = employeeService.findByEmail(userDetail.getUsername());
+            model.addAttribute("userEmployee", userEmployee);
+        }
         Employee employee = employeeService.findById(id);
         model.addAttribute("employee", employee);
 
-        Employee userDetailEmployee = employeeService.findByEmail(userDetail.getUsername());
-        model.addAttribute("userDetailEmployee", userDetailEmployee);
         return "employees/edit";
     }
 
@@ -95,14 +127,11 @@ public class EmployeeController {
             return "employees/edit";
         }
 
-        System.out.println(employee.getRole());
-
         employeeService.updateSaveEmployee(employee);
 
         if (res.hasErrors()) {
             model.addAttribute("employee", employee);
         }
-        System.out.println(employee.getPassword());
 
         return "redirect:/employees";
     }

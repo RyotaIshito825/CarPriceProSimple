@@ -1,4 +1,4 @@
-.send_emails-alreadies {
+.user_regis {
   position: absolute;
   top: 50%;
   left: 50%;
@@ -7,21 +7,21 @@
   box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
 }
 
-.send_emails-alreadies_inner {
+.user_regis_inner {
   border: 1px solid gray;
   border-radius: 5px;
   background-color: white;
   padding: 50px;
 }
 
-.send_emails-alreadies-title {
+.user_regis-title {
   font-size: 22px;
   font-weight: bold;
   text-align: center;
   margin-bottom: 20px;
 }
 
-.send_emails-alreadies-texts {
+.user_regis-texts {
   padding: 30px 50px;
   border-radius: 5px;
   color: white;
@@ -30,12 +30,12 @@
   background-image: linear-gradient(135deg, #52E5E7 10%, #130CB7 100%);
 }
 
-.send_emails-alreadies-login-links {
+.user_regis-login-links {
   text-align: center;
   margin-top: 30px;
 }
 
-.send_emails-alreadies-login-link {
+.user_regis-login-link {
   text-align: center;
   text-decoration-line: underline;
-}/*# sourceMappingURL=send_email-already.css.map */
+}/*# sourceMappingURL=user_registration.css.map */

@@ -23,3 +23,20 @@ spring:
   web:
     resources:
       static-locations: classpath:/static/
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: udonishito0506@gmail.com
+    password: byky ohgn svie rxrl
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls.enable: true
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            client-id: 888492838675-4hj3hsssia5ako2lndop4jpav37prg5k.apps.googleusercontent.com
+            client-secret: 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

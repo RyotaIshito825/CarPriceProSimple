@@ -1,6 +1,7 @@
 package com.techacademy.service;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.regex.Matcher;
@@ -30,19 +31,73 @@ public class EmployeeService {
         return employeeRepository.findAll();
     }
 
-    // 従業員1件表示
+    // IDで1件取得
     public Employee findById(Integer id) {
         Optional<Employee> option = employeeRepository.findById(id);
         Employee employee = option.orElse(null);
         return employee;
     }
+    // メールで1件取得
     public Employee findByEmail(String email) {
         Optional<Employee> option = employeeRepository.findByEmail(email);
         Employee employee = option.orElse(null);
         return employee;
     }
+    // OauthIdで1件取得
+    public Employee findByOauthId(String oauthId) {
+        Optional<Employee> option = employeeRepository.findByOauthId(oauthId);
+        Employee employee = option.orElse(null);
+        return employee;
+    }
 
-    //従業員更新保存
+    // 従業員新規登録保存
+    public void addSaveEmployee(Employee employee) {
+        LocalDateTime now = LocalDateTime.now();
+        employee.setAffiliatedStore("フリー");
+        employee.setDepartment("営業");
+        employee.setRole(Employee.Role.GENERAL);
+        employee.setDeleteFlg(false);
+        employee.setCreatedAt(now);
+        employee.setUpdatedAt(now);
+
+        employeeRepository.save(employee);
+    }
+    // 従業員新規登録
+    public List<ErrorKinds> add(Employee employee) {
+
+        List<ErrorKinds> listErrorKinds = new ArrayList<>();
+        ErrorKinds result = !employee.getPassword().equals("") ? ErrorKinds.CHECK_OK : passwordCheck(employee);
+        // パスワードチェック
+        if (employee.getPassword().equals("")) {
+            listErrorKinds.add(ErrorKinds.PASSWORD_BLANK_ERROR);
+        } else if (ErrorKinds.CHECK_OK != passwordCheck(employee)) {
+            listErrorKinds.add(passwordCheck(employee));
+        }
+        // メールチェック
+        if (employee.getEmail().equals("")) {
+            listErrorKinds.add(ErrorKinds.EMAIL_BLANK_ERROR);
+        }
+        // メール重複チェック
+        Employee emp = findByEmail(employee.getEmail());
+        if (emp != null) {
+            listErrorKinds.add(ErrorKinds.EMAIL_DUPLICATION_ERROR);
+        }
+        // 名前チェック文字数チェック
+        if (employee.getName().equals("")) {
+            listErrorKinds.add(ErrorKinds.TEXT_BLANK_ERROR);
+        }
+        if (isOutOfRangeText(employee)) {
+            listErrorKinds.add(ErrorKinds.TEXT_20RANGECHECK_ERROR);
+        }
+        if (listErrorKinds.isEmpty()) {
+            listErrorKinds.add(ErrorKinds.SUCCESS);
+            return listErrorKinds;
+        }
+
+        return listErrorKinds;
+    }
+
+    // 従業員更新保存
     public void updateSaveEmployee(Employee employee) {
         Employee emp = findById(employee.getId());
         employee.setDeleteFlg(false);
@@ -110,6 +165,14 @@ public class EmployeeService {
     // 空白チェック
     public ErrorKinds blankCheck(Employee employee) {
         return employee.getName().isEmpty() || employee.getEmail().isEmpty() || employee.getDepartment().isEmpty() ? ErrorKinds.BLANK_ERROR : ErrorKinds.CHECK_OK;
+    }
+    // テキストの文字数チェック処理
+    public boolean isOutOfRangeText(Employee employee) {
+        String name = employee.getName();
+        if (name == null) {
+            return false;
+        }
+        return name.length() > 20;
     }
 
 }

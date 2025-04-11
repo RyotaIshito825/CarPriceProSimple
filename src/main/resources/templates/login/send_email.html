@@ -7,8 +7,8 @@
     <div class="send_emails">
         <div class="send_emails_inner">
             <div class="send_emails-title">Send password reset email.</div>
-            <form action="" method="" class="send_emails_forms">
-                <input type="email" class="send_emails-input" placeholder="Email Address">
+            <form th:action="@{/login/password_reset_submit}" method="post" class="send_emails_forms">
+                <input type="email" class="send_emails-input" placeholder="Email Address" id="email" name="email">
                 <div class="send_emails-btns">
                     <div class="send_emails-btn-cancels">
                         <a th:href="@{/login}" class="send_emails-btn-cancel">Cancel</a>
