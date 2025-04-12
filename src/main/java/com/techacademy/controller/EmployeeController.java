@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.core.oidc.user.OidcUser;
+import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -38,12 +39,16 @@ public class EmployeeController {
 
     // ユーザー一覧画面表示
     @GetMapping
-    public String list(@AuthenticationPrincipal OidcUser oidcUser, @AuthenticationPrincipal UserDetail userDetail, Model model) {
+    public String list(@AuthenticationPrincipal OAuth2User oauth2User, @AuthenticationPrincipal OidcUser oidcUser, @AuthenticationPrincipal UserDetail userDetail, Model model) {
 
         List<Employee> employees = employeeService.findAll();
         model.addAttribute("employees", employees);
 
         Employee userEmployee = null;
+        if (oauth2User != null) {
+            userEmployee = employeeService.findByOauthId(oauth2User.getName());
+            model.addAttribute("userEmployee", userEmployee);
+        }
         if (oidcUser != null) {
             userEmployee = employeeService.findByOauthId(oidcUser.getSubject());
             model.addAttribute("userEmployee", userEmployee);
@@ -58,9 +63,13 @@ public class EmployeeController {
 
     // ユーザー詳細画面表示
     @GetMapping(value = "/{id}")
-    public String detail(@AuthenticationPrincipal OidcUser oidcUser, @AuthenticationPrincipal UserDetail userDetail, @PathVariable Integer id, Model model) {
+    public String detail(@AuthenticationPrincipal OAuth2User oauth2User, @AuthenticationPrincipal OidcUser oidcUser, @AuthenticationPrincipal UserDetail userDetail, @PathVariable Integer id, Model model) {
 
         Employee userEmployee = null;
+        if (oauth2User != null) {
+            userEmployee = employeeService.findByOauthId(oauth2User.getName());
+            model.addAttribute("userEmployee", userEmployee);
+        }
         if (oidcUser != null) {
             userEmployee = employeeService.findByOauthId(oidcUser.getSubject());
             model.addAttribute("userEmployee", userEmployee);
@@ -78,8 +87,12 @@ public class EmployeeController {
 
     // ユーザー新規登録画面
     @GetMapping(value = "/add")
-    public String create(@AuthenticationPrincipal OidcUser oidcUser, @AuthenticationPrincipal UserDetail userDetail, Model model) {
+    public String create(@AuthenticationPrincipal OAuth2User oauth2User, @AuthenticationPrincipal OidcUser oidcUser, @AuthenticationPrincipal UserDetail userDetail, Model model) {
         Employee userEmployee = null;
+        if (oauth2User != null) {
+            userEmployee = employeeService.findByOauthId(oauth2User.getName());
+            model.addAttribute("userEmployee", userEmployee);
+        }
         if (oidcUser != null) {
             userEmployee = employeeService.findByOauthId(oidcUser.getSubject());
             model.addAttribute("userEmployee", userEmployee);
@@ -99,9 +112,13 @@ public class EmployeeController {
 
     // ユーザー情報更新画面表示
     @GetMapping(value = "/{id}/update")
-    public String edit(@AuthenticationPrincipal OidcUser oidcUser, @AuthenticationPrincipal UserDetail userDetail, @PathVariable Integer id, Model model) {
+    public String edit(@AuthenticationPrincipal OAuth2User oauth2User, @AuthenticationPrincipal OidcUser oidcUser, @AuthenticationPrincipal UserDetail userDetail, @PathVariable Integer id, Model model) {
 
         Employee userEmployee = null;
+        if (oauth2User != null) {
+            userEmployee = employeeService.findByOauthId(oauth2User.getName());
+            model.addAttribute("userEmployee", userEmployee);
+        }
         if (oidcUser != null) {
             userEmployee = employeeService.findByOauthId(oidcUser.getSubject());
             model.addAttribute("userEmployee", userEmployee);

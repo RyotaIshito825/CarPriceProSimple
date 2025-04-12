@@ -7,6 +7,7 @@ import java.io.InputStream;
 import java.security.GeneralSecurityException;
 import java.util.Arrays;
 import java.util.List;
+import java.util.UUID;
 
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellType;
@@ -19,6 +20,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.core.oidc.user.OidcUser;
+import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -81,23 +83,51 @@ public class CarsController {
 
     // 車両一覧画面表示
     @GetMapping(value = "/list")
-    public String top(@AuthenticationPrincipal OidcUser oidcUser, @AuthenticationPrincipal UserDetail userDetail, @PageableDefault(page = 0, size = 8) Pageable pageable, String keyword, Integer minPrice, Integer maxPrice, Model model) {
+    public String top(@AuthenticationPrincipal OAuth2User oauth2User, @AuthenticationPrincipal OidcUser oidcUser, @AuthenticationPrincipal UserDetail userDetail, @PageableDefault(page = 0, size = 8) Pageable pageable, String keyword, Integer minPrice, Integer maxPrice, Model model) {
 
         Employee userEmployee = null;
-        if (oidcUser != null) {
-            System.out.println(oidcUser.getSubject());
-            System.out.println(oidcUser.getEmail());
-            System.out.println(oidcUser.getFullName());
-
-            System.out.println(oidcUser);
-
-            userEmployee = employeeService.findByOauthId(oidcUser.getSubject());
-//            model.addAttribute("userEmployee", userEmployee);
-            return "login/login";
+        // LINEログイン
+        if (oauth2User != null) {
+            userEmployee = employeeService.findByOauthId(oauth2User.getName());
+            if (userEmployee == null) {
+                userEmployee = new Employee();
+                userEmployee.setName(oauth2User.getAttribute("displayName"));
+                userEmployee.setEmail("user@example.com");
+                UUID uuid = UUID.randomUUID();
+                String password = uuid.toString();
+                userEmployee.setPassword(password);
+                userEmployee.setOauthId(oauth2User.getName());
+                employeeService.addSaveEmployee(userEmployee);
+            } else {
+                userEmployee.setOauthId(oauth2User.getName());
+                employeeService.updateSaveEmployee(userEmployee);
+            }
+            model.addAttribute("userEmployee", userEmployee);
         }
+
+        // Googleログイン
+        if (oidcUser != null) {
+            userEmployee = employeeService.findByOauthId(oidcUser.getSubject());
+            if (userEmployee == null) {
+                userEmployee = new Employee();
+                userEmployee.setName(oidcUser.getFullName());
+                userEmployee.setEmail(oidcUser.getEmail());
+                UUID uuid = UUID.randomUUID();
+                String password = uuid.toString();
+                userEmployee.setPassword(password);
+                userEmployee.setOauthId(oidcUser.getSubject());
+                employeeService.addSaveEmployee(userEmployee);
+
+            } else {
+                userEmployee.setOauthId(oidcUser.getSubject());
+                employeeService.updateSaveEmployee(userEmployee);
+            }
+            model.addAttribute("userEmployee", userEmployee);
+        }
+
+        // 通常セキュリティログイン
         if (userDetail != null) {
             userEmployee = employeeService.findByEmail(userDetail.getUsername());
-//            model.addAttribute("userDetailEmployee", userDetailEmployee);
             model.addAttribute("userEmployee", userEmployee);
         }
 
@@ -145,13 +175,30 @@ public class CarsController {
 
     // 車両詳細画面表示
     @GetMapping(value = "/{id}")
-    public String detail(@PathVariable Integer id, Model model) {
+    public String detail(@AuthenticationPrincipal OAuth2User oauth2User, @AuthenticationPrincipal OidcUser oidcUser, @AuthenticationPrincipal UserDetail userDetail, @PathVariable Integer id, Model model) {
 
         Car car = carService.findById(id);
         boolean viExits = String.valueOf(car.getViYear()) == null ? false : true;
 
-        Employee employee = employeeService.findById(1);
+        Employee employee = employeeService.findById(id);
+
+        Employee userEmployee = null;
+        if (oauth2User != null) {
+            userEmployee = employeeService.findByOauthId(oauth2User.getName());
+            model.addAttribute("userEmployee", userEmployee);
+        }
+        if (oidcUser != null) {
+            userEmployee = employeeService.findByOauthId(oidcUser.getSubject());
+            model.addAttribute("userEmployee", userEmployee);
+        }
+        if (userDetail != null) {
+            userEmployee = employeeService.findByEmail(userDetail.getUsername());
+            model.addAttribute("userEmployee", userEmployee);
+        }
+
         model.addAttribute("employee", employee);
+        model.addAttribute("userEmployee", userEmployee);
+
         model.addAttribute("viExits", viExits);
         model.addAttribute("car", car);
 
@@ -160,9 +207,13 @@ public class CarsController {
 
     // 車両新規登録
     @GetMapping(value = "/add")
-    public String create(@AuthenticationPrincipal OidcUser oidcUser, @AuthenticationPrincipal UserDetail userDetail, @ModelAttribute Car car, Model model) {
+    public String create(@AuthenticationPrincipal OAuth2User oauth2User, @AuthenticationPrincipal OidcUser oidcUser, @AuthenticationPrincipal UserDetail userDetail, @ModelAttribute Car car, Model model) {
 
         Employee userEmployee = null;
+        if (oauth2User != null) {
+            userEmployee = employeeService.findByOauthId(oauth2User.getName());
+            model.addAttribute("userEmployee", userEmployee);
+        }
         if (oidcUser != null) {
             userEmployee = employeeService.findByOauthId(oidcUser.getSubject());
             model.addAttribute("userEmployee", userEmployee);
@@ -209,9 +260,13 @@ public class CarsController {
 
     // 車両更新画面表示
     @GetMapping(value = "/{id}/update")
-    public String edit(@AuthenticationPrincipal OidcUser oidcUser, @AuthenticationPrincipal UserDetail userDetail, @PathVariable Integer id, Model model) {
+    public String edit(@AuthenticationPrincipal OAuth2User oauth2User, @AuthenticationPrincipal OidcUser oidcUser, @AuthenticationPrincipal UserDetail userDetail, @PathVariable Integer id, Model model) {
 
         Employee userEmployee = null;
+        if (oauth2User != null) {
+            userEmployee = employeeService.findByOauthId(oauth2User.getName());
+            model.addAttribute("userEmployee", userEmployee);
+        }
         if (oidcUser != null) {
             userEmployee = employeeService.findByOauthId(oidcUser.getSubject());
             model.addAttribute("userEmployee", userEmployee);
@@ -256,9 +311,13 @@ public class CarsController {
 
     // テンプレート一覧画面表示
     @GetMapping(value = "/template")
-    public String template(@AuthenticationPrincipal OidcUser oidcUser, @AuthenticationPrincipal UserDetail userDetail, Model model) {
+    public String template(@AuthenticationPrincipal OAuth2User oauth2User, @AuthenticationPrincipal OidcUser oidcUser, @AuthenticationPrincipal UserDetail userDetail, Model model) {
 
         Employee userEmployee = null;
+        if (oauth2User != null) {
+            userEmployee = employeeService.findByOauthId(oauth2User.getName());
+            model.addAttribute("userEmployee", userEmployee);
+        }
         if (oidcUser != null) {
             userEmployee = employeeService.findByOauthId(oidcUser.getSubject());
             model.addAttribute("userEmployee", userEmployee);
@@ -292,8 +351,12 @@ public class CarsController {
 
     // データ取込画面表示
     @GetMapping(value = "/intake")
-    public String intake(@AuthenticationPrincipal OidcUser oidcUser, @AuthenticationPrincipal UserDetail userDetail, Model model) {
+    public String intake(@AuthenticationPrincipal OAuth2User oauth2User, @AuthenticationPrincipal OidcUser oidcUser, @AuthenticationPrincipal UserDetail userDetail, Model model) {
         Employee userEmployee = null;
+        if (oauth2User != null) {
+            userEmployee = employeeService.findByOauthId(oauth2User.getName());
+            model.addAttribute("userEmployee", userEmployee);
+        }
         if (oidcUser != null) {
             userEmployee = employeeService.findByOauthId(oidcUser.getSubject());
             model.addAttribute("userEmployee", userEmployee);

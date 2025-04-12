@@ -40,3 +40,21 @@ spring:
           google:
             client-id: 888492838675-4hj3hsssia5ako2lndop4jpav37prg5k.apps.googleusercontent.com
             client-secret: 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
+          line:
+            provider: line
+            client-id: 2007249399
+            client-secret: 1b8e662b3a7986321acf6019a2b05ca2
+            client-authentication-method: client_secret_post
+            authorization-grant-type: authorization_code
+            redirect-uri: "{baseUrl}/login/oauth2/code/{registrationId}"
+            scope: profile
+            client-name: LINE
+        provider:
+          line:
+            authorization-uri: https://access.line.me/oauth2/v2.1/authorize
+            token-uri: https://api.line.me/oauth2/v2.1/token
+            user-info-uri: https://api.line.me/v2/profile
+            user-info-authentication-method: query
+            user-name-attribute: userId
+            jwk-set-uri: https://api.line.me/oauth2/v2.1/certs
+              
