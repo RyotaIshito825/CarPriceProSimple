@@ -20,16 +20,8 @@ public class PriceCard {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    // ユーザーと紐付け
-    @OneToOne
-    @JoinColumn(name = "employee_id", referencedColumnName = "id", nullable = false)
-    private Employee employee;
-
     // プライスカード名
     @Column(length = 100, nullable = false)
     private String priceCardName;
 
-//    // ファイルパス
-//    @Column(nullable = false)
-//    private String filePath;
 }

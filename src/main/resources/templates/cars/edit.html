@@ -13,7 +13,7 @@
                 <div class="content-mains_inner">
                     <div class="page_title">車両情報更新</div>
 
-                    <form th:action="@{/cars/{id}/update(id=${car.id})}" method="post" class="car_edits_form">
+                    <form th:action="@{/cars/update(index=${index})}" method="post" class="car_edits_form">
                         <div class="car_edits" th:object="${car}">
                             <div class="car_edits_tables">
                                 <div class="car_edits_tables-tr">
@@ -157,7 +157,7 @@
                                     </div>
                                 </div>
                                 <div class="car_edits_edit-btns">
-                                    <a th:href="@{/cars}" class="car_edits_edit-btn">戻る</a>
+                                    <a th:href="@{/cars/list}" class="car_edits_edit-btn">戻る</a>
                                     <button type="submit" class="car_edits-update-btn">更新</button>
                                 </div>
                             </div>

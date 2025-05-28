@@ -1,6 +1,6 @@
 <div class="side" id="side" xmlns:sec="http://www.thymeleaf.org/extras/spring-security" xmlns:th="http://www.thymeleaf.org" th:fragment="side_bar">
     <div class="app_icons">
-        <img src="" alt="" class="app_icon">
+        <img th:src="@{/img/logo-blue-1.png}" alt="" class="app_icon" style="border-radius: 100px;">
     </div>
     <nav class="menus">
         <ul class="menu">
@@ -11,9 +11,9 @@
                 </a>
             </li>
             <li>
-                <a th:href="@{/cars/list}" style="" class="menu-list">
-                    <i class="fa-solid fa-car side-icon fa-lg"></i>
-                    <div>車両一覧</div>
+                <a th:href="@{/cars/shop}" style="" class="menu-list">
+                    <i class="fa-solid fa-shop"></i>
+                    <div>店名&画像登録</div>
                 </a>
             </li>
             <li>
@@ -35,34 +35,16 @@
                 </a>
             </li>
             <li>
-                <a th:href="@{/employees/{id}(id=${userEmployee.id})}" style="" class="menu-list">
-                    <i class="fa-solid fa-user side-icon fa-lg"></i>
-                    <div>プロフィール情報</div>
+                <a th:href="@{/cars/list}" style="" class="menu-list">
+                    <i class="fa-solid fa-car side-icon fa-lg"></i>
+                    <div>車両一覧</div>
                 </a>
             </li>
-            <li>
-                <a th:href="@{/employees}" style="" class="menu-list">
-                    <i class="fa-solid fa-user-group side-icon fa-lg"></i>
-                    <div>ユーザー一覧</div>
+            <li style="text-align: center; margin-top: 30px;">
+                <a th:href="@{/file/車両一覧.xlsx}" download="車両一覧.xlsx" class="menu-list" style="padding: 3px 0; display: block;text-align: center; background-color: white; color: rgb(14, 130, 255);">
+                    <div style="line-height: 1.5;">取込用車両一覧<br>Excelテンプレ<br>ダウンロード</div>
                 </a>
             </li>
         </ul>
     </nav>
-
-    <div class="side_store-names" th:object="${userEmployee}">
-        <div class="side_store-name" th:text="*{affiliatedStore}"></div>
-    </div>
-
-    <div class="side_employee-profiles" th:object="${userEmployee}">
-        <div class="side_employee-profiles-inner">
-            <div class="side_employee-profile-images">
-                <img src="./img/icons/profile-human.png" alt="">
-            </div>
-            <div class="side_employee-profile-names">
-                <div class="side_employee-profile-name" th:text="*{name}"></div>
-                <div class="side_employee-profile-department" th:text="*{department}">営業</div>
-            </div>
-        </div>
-    </div>
-
 </div>

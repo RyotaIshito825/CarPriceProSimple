@@ -25,6 +25,9 @@ public class ErrorMessage {
             put(ErrorKinds.TEXT_20RANGECHECK_ERROR, new ArrayList<String>(Arrays.asList("textError", "20文字以内で入力してください")));
             put(ErrorKinds.TEXT_BLANK_ERROR, new ArrayList<String>(Arrays.asList("textError",  "名前を入力してください")));
 
+            put(ErrorKinds.FILE_SIZE_ERROR, new ArrayList<String>(Arrays.asList("fileError", "ファイルサイズが大きすぎます。10MB以下にしてください")));
+            put(ErrorKinds.FILE_TYPE_ERROR, new ArrayList<String>(Arrays.asList("fileError", "ファイルタイプがエラーです")));
+
             put(ErrorKinds.GOOGLESPREADSHEET_AUTHORITY_ERROR, new ArrayList<String>(Arrays.asList("googleSpreadSheetAuthorityError", "エラー: アクセス権限が不足しています。スプレッドシートの共有設定や認証情報、APIキーを確認してください")));
             // パスワード再設定の際のメール送信時にemployeeが見つからない場合のエラーメッセージ
             put(ErrorKinds.EMPLOYEE_NOTFOUND_ERROR, new ArrayList<String>(Arrays.asList("employeeNotFoundError", "このメールのユーザーが見つかりません。")));

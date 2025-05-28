@@ -3,7 +3,6 @@
 <head th:replace="common/header :: head_fragment(title = '車両一覧')">
 
 <body class="">
-
     <div class="contents">
         <!-- サイドバー -->
         <div th:replace="common/side_bar :: side_bar"></div>
@@ -20,11 +19,11 @@
 
                 <div class="car_list-searches-container">
                     <div class="car_list-batch-processings">
-                        <form th:action="@{/generate-pdfs}" method="get" class="car_list-batch-select">
+                        <form th:action="@{/generate-pdfs}" method="post" class="car_list-batch-select">
                             <select name="option" id="" class="car_list-batch-select">
                                 <option value=""></option>
-                                <option value="create">pdf作成</option>
-                                <option value="delete">削除</option>
+                                <!-- <option value="create">pdf作成</option> -->
+                                <option value="delete">一括削除</option>
                             </select>
                             <button type="submit" class="car_list-batch-select-btn">実行</button>
 
@@ -34,6 +33,7 @@
                                 </th:block>
                             </div>
                             <input type="hidden" th:if="${priceCardName}" name="priceCardName" th:value="${priceCardName}">
+                            <!-- <input type="hidden" th:if="${employee}" name="employeeId" th:value="${employee.id}"> -->
                         </form>
                     </div>
 
@@ -58,7 +58,7 @@
                         </form>
                     </div>
 
-                    <form th:action="@{/generate-pdfs}" method="get" class="car_list-selected-pricecards">
+                    <form th:action="@{/generate-pdfs}" method="post" class="car_list-selected-pricecards">
                         <div class="car_list-selected-pricecards">
                             <div class="car_list-selected-pricecard-wrapper" style="width: 160px;">
                                 <label for="" class="car_list-selected-pricecard-label">選択テンプレート</label>
@@ -98,13 +98,13 @@
                         </div>
                     </div>
 
-                    <div class="cars_tables-tbody" th:each="car:${carList}">
-                        <form th:action="@{/generate-pdf}" method="get" class="cars_tables-tbody_item">
+                    <div class="cars_tables-tbody" th:each="car, stat : ${page.content}">
+                        <form th:action="@{/generate-pdf}" method="post" class="cars_tables-tbody_item">
                             <div class="cars_tables-tbody-checkboxes">
                                 <input type="checkbox" class="cars_tables-tbody-checkbox" th:value="${car.id}" name="carId">
                             </div>
                             <div class="cars_tables-tbody-tr">
-                                <a th:href="@{/cars/{id}(id=${car.id})}" class="cars_tables-tbody-href">
+                                <a th:href="@{/cars/update(index=${stat.index})}" class="cars_tables-tbody-href">
                                     <div class="cars_tables-tbody-td cars_tables-tbody-td-maker" th:text="${car.maker}"></div>
                                     <div class="cars_tables-tbody-td cars_tables-tbody-td-car_model" th:text="${car.carModel}"></div>
                                     <div class="cars_tables-tbody-td cars_tables-tbody-td-grade" th:text="${car.grade}"></div>
@@ -145,12 +145,66 @@
                             <button type="submit" class="cars_list_pdf-btn">作成</button>
                             <input type="hidden" name="id" th:value="${car.id}">
                             <input type="hidden" th:if="${priceCardName}" name="priceCardName" th:value="${priceCardName}">
+                            <input type="hidden" th:if="${employee}" name="employeeId" th:value="${employee.id}">
+
+                            <input type="hidden" name="maker" th:value="${car.maker}">
+                            <input type="hidden" name="carModel" th:value="${car.carModel}">
+                            <input type="hidden" name="grade" th:value="${car.grade}">
+                            <input type="hidden" name="classification" th:value="${car.classification.name()}">
+                            <input type="hidden" name="firstJc" th:value="${car.firstJc.name()}">
+                            <input type="hidden" name="registrationYear" th:value="${car.registrationYear}">
+                            <input type="hidden" name="registrationMonth" th:value="${car.registrationMonth}">
+                            <input type="hidden" name="viJc" th:value="${car.viJc}">
+                            <input type="hidden" name="viYear" th:value="${car.viYear}">
+                            <input type="hidden" name="viMonth" th:value="${car.viMonth}">
+                            <input type="hidden" name="price" th:value="${car.price}">
+                            <input type="hidden" name="priceDpf" th:value="${car.priceDpf}">
+                            <input type="hidden" name="totalPrice" th:value="${car.totalPrice}">
+                            <input type="hidden" name="totalPriceDpf" th:value="${car.totalPriceDpf}">
+                            <input type="hidden" name="calcPriceOfInt" th:value="${car.calcPriceOfInt}">
+                            <input type="hidden" name="calcPriceOfDpf" th:value="${car.calcPriceOfDpf}">
+                            <input type="hidden" name="mileage" th:value="${car.mileage}">
+
+
                         </form>
 
                     </div>
                 </div>
+                <nav aria-label="Page navigation example" class="mt-4" th:if="${carList != null && carList.size != 0}">
+                    <ul class="pagination justify-content-end">
+                        <!-- 前へ -->
+                        <li class="page-item" th:classappend="${page.first} ? 'disabled'">
+                            <a class="page-link"
+                               th:if="${!page.first}"
+                               th:href="@{/cars/list(page=${page.number - 1}, keyword=${keyword}, minPrice=${minPrice}, maxPrice=${maxPrice})}">
+                               Previous
+                            </a>
+                            <span class="page-link" th:if="${page.first}">Previous</span>
+                        </li>
 
-                <nav aria-label="Page navigation example" class="mt-4">
+                        <!-- ページ番号 -->
+                        <li class="page-item"
+                            th:each="i : ${#numbers.sequence(0, page.totalPages - 1)}"
+                            th:classappend="${i == page.number} ? 'active'">
+                            <a class="page-link"
+                               th:href="@{/cars/list(page=${i}, keyword=${keyword}, minPrice=${minPrice}, maxPrice=${maxPrice})}"
+                               th:text="${i + 1}">1</a>
+                        </li>
+
+                        <!-- 次へ -->
+                        <li class="page-item" th:classappend="${page.last} ? 'disabled'">
+                            <a class="page-link"
+                               th:if="${!page.last}"
+                               th:href="@{/cars/list(page=${page.number + 1}, keyword=${keyword}, minPrice=${minPrice}, maxPrice=${maxPrice})}">
+                               Next
+                            </a>
+                            <span class="page-link" th:if="${page.last}">Next</span>
+                        </li>
+                    </ul>
+                </nav>
+
+
+                <!-- <nav aria-label="Page navigation example" class="mt-4">
                     <ul class="pagination justify-content-end">
                       <li class="page-item">
                         <span class="page-link" th:if="${page.first}">Previous</span>
@@ -168,7 +222,7 @@
                         <a class="page-link" th:if="${!page.last}" th:href="@{/cars/list(page = (${page.number} + 1))}">Next</a>
                       </li>
                     </ul>
-                </nav>
+                </nav> -->
             </div>
         </div>
     </div>

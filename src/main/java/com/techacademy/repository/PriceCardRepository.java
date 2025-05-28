@@ -8,5 +8,6 @@ import com.techacademy.entity.PriceCard;
 
 public interface PriceCardRepository extends JpaRepository<PriceCard, Integer> {
 
-    Optional<PriceCard> findByEmployeeId(Integer id);
+    Optional<PriceCard> findByPriceCardName(String priceCardName);
+
 }

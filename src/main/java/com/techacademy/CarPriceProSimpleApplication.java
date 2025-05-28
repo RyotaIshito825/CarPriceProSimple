@@ -4,10 +4,10 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class CarPriceProApplication {
+public class CarPriceProSimpleApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(CarPriceProApplication.class, args);
+		SpringApplication.run(CarPriceProSimpleApplication.class, args);
 	}
 
 }

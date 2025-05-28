@@ -2,7 +2,8 @@
 <html lang="ja" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
 <head th:replace="common/header :: head_fragment(title='プライスカード①')"></head>
 
-<body th:style="|background-image: url(@{/img/background-image.jpg});|"> <!-- 冒頭と末尾に|を入れるのを忘れないで-->
+<!-- <body th:style="|background-image: url(@{/img/background-image.jpg}); background-repeat: repeat;|"> 冒頭と末尾に|を入れるのを忘れないで-->
+<body th:style="|background-image: url(@{/img/background-image.jpg}); background-repeat: repeat;|">
 
     <div class="card" th:each="car : ${carList}">
         <div class="content" id="content">
@@ -10,10 +11,11 @@
             <div class="headers">
                 <div class="header_left">
                     <div class="company-name-label">販売会社名：</div>
-                    <div class="company-name contenteditable" contenteditable="true">BUDDICA</div>
+                    <div class="company-name" th:text="${shopName}" contenteditable="true"></div>
+                    <!-- <div class="company-name contenteditable" contenteditable="true" th:text="${employeeAffiliatedStore}"></div> -->
                 </div>
                 <div class="header_right">
-                    <img th:src="@{../../img/HELLO.jpeg}" alt="" class="header_logo">
+                    <!-- <img th:src="@{../../img/HELLO.jpeg}" alt="" class="header_logo"> -->
                 </div>
             </div>
             <!-- 車両情報部分 -->
@@ -37,14 +39,14 @@
                 <div class="models">
                     <div class="models_inner">
                         <div class="model-tags">車名：</div>
-                        <div class="maker" th:text="${car.maker}" style="margin-right: 10px;" contenteditable="true"></div>
-                        <div class="car_model" th:text="${car.carModel}" contenteditable="true"></div>
+                        <div class="maker" th:text="${car.maker}" style="margin-right: 10px;" contenteditable="true" id="carmaker"></div>
+                        <div class="car_model" th:text="${car.carModel}" contenteditable="true" id="carname"></div>
                     </div>
                 </div>
                 <div class="grades">
                     <div class="grades_inner">
                         <div class="grades-text">グレード・ミッション・排気量（主な仕様区分）</div>
-                        <div class="grade" th:text="${car.grade}" contenteditable="true"></div>
+                        <div class="grade" th:text="${car.grade}" contenteditable="true" id="cargrade"></div>
                     </div>
                 </div>
             </div>
@@ -52,13 +54,15 @@
             <div class="mains">
                 <div class="payment-tags">
                     <div class="payment-tags_inner">
-                        <img th:src="@{../../img/logo.png}" alt="" class="payment-img">
+                        <div class="payment-tags_images">
+                            <img th:if="${shopImageBase64}" th:src="'data:image/png;base64,' + ${shopImageBase64}" alt="店舗画像" class="payment-img" style="width:145px; height:40px;">
+                        </div>
                         <div class="payment-text">支払総額</div>
                     </div>
                 </div>
                 <div class="total-prices">
                     <div class="total-prices_inner">
-                        <div class="total-price" th:text="${car.totalPrice}" contenteditable="true"></div>
+                        <div class="total-price" th:text="${car.totalPrice}" contenteditable="true" id="totalprice"></div>
                     </div>
                 </div>
                 <div class="recycles">
@@ -83,7 +87,9 @@
                     <div class="total-price_dots-wrapper">
                         <div class="total_price-dot_inner">
                             <div class="total-price-dot">⚫︎</div>
-                            <div class="total-price-dpf" th:text="${car.totalPriceDpf}" contenteditable="true"></div>
+                            <div class="total-price-dpf_inner">
+                                <div class="total-price-dpf" th:text="${car.totalPriceDpf}" contenteditable="true"></div>
+                            </div>
                         </div>
                         <div class="mains-uom_inner">
                             <div class="mains-uom">万円</div>
@@ -97,25 +103,33 @@
                 <div class="price-wrapper">
                     <div class="price-tag">車両価格</div>
                     <div class="prices">
-                        <div class="price" th:text="${car.price}" contenteditable="true"></div>
+                        <div class="price_inner">
+                            <div class="price" th:text="${car.price}" contenteditable="true" id="price"></div>
+                        </div>
                         <div class="price-dot">.</div>
-                        <div class="price-dpf" th:text="${car.priceDpf}" contenteditable="true"></div>
+                        <div class="price-dpf_inner">
+                            <div class="price-dpf" th:text="${car.priceDpf}" contenteditable="true"></div>
+                        </div>
                     </div>
                     <div class="price-uom">万円</div>
                 </div>
                 <div class="ohde-wrapper">
                     <div class="ohde-tag">諸費用</div>
                     <div class="ohdes">
-                        <div class="ohde" th:text="${car.calcPriceOfInt}" contenteditable="true"></div>
+                        <div class="ohde_inner">
+                            <div class="ohde" th:text="${car.calcPriceOfInt}" contenteditable="true"></div>
+                        </div>
                         <div class="ohde-dot">.</div>
-                        <div class="ohde-dpf" th:text="${car.calcPriceOfDpf}" contenteditable="true"></div>
+                        <div class="ohde-dpf_inner">
+                            <div class="ohde-dpf" th:text="${car.calcPriceOfDpf}" contenteditable="true"></div>
+                        </div>
                     </div>
                     <div class="ohde-uom">万円</div>
                 </div>
                 <div class="price-ohde-text">
                     <div class="price-ohde-text-inner">
                         <div>支払総額は</div>
-                        <div class="price-ohde-month" contenteditable="true">12</div>
+                        <div class="price-ohde-month" contenteditable="true" th:text="${currentMonth}"></div>
                         <div>月現在、</div>
                         <div class="price-ohde-city" contenteditable="true"></div>
                         <div>登録(届出)で店頭納車の場合の価格です。</div>
@@ -158,11 +172,11 @@
                             <div class="guarantees-title">保証の有無</div>
                             <div class="with-guarantees">
                                 <div class="with-guarantees-checkboxes">
-                                    <input type="checkbox" class="with-guarantee" name="" value="">
+                                    <input type="checkbox" class="with-guarantee" name="" value="" checked>
                                     <div class="with-guarantee-text">保証付<span>保証費用は車両価格に含みます。</span></div>
                                 </div>
                                 <div class="guarantee-details">
-                                    <div class="guarantee-details-text">⚪️保証内容<span>※詳しくはスタッフにお尋ね下さい。</span></div>
+                                    <div class="guarantee-details-text">⚪︎️保証内容<span style="margin-left: 5px;">※詳しくはスタッフにお尋ね下さい。</span></div>
                                     <div class="guarantee-details-contents">
                                         <div class="brackets-first">〔</div>
                                         <div class="guarantee-details-content" contenteditable="true">部分保証</div>
@@ -170,13 +184,13 @@
                                     </div>
                                 </div>
                                 <div class="guarantee-periods">
-                                    <div class="guarantee-period-text">⚪️保証期間・保証走行距離</div>
+                                    <div class="guarantee-period-text">⚪保証期間・保証走行距離</div>
                                     <div class="guarantee-period-contents">
                                         <div class="brackets-first">〔</div>
                                         <div class="guarantee-period-content">
-                                            <div contenteditable="true" class="guarantee-period">12</div>
+                                            <div contenteditable="true" class="guarantee-period">1</div>
                                             <div class="guarantee-period-text">ヵ月<span>又は</span></div>
-                                            <div contenteditable="true" class="guarantee-distance">10</div>
+                                            <div contenteditable="true" class="guarantee-distance">1</div>
                                             <div class="guarantee-distance-text">千<span>km</span></div>
                                         </div>
                                         <div class="brackets-end">〕</div>
@@ -209,7 +223,8 @@
                             <div class="tr mileage_tr">
                                 <div class="th">走行距離</div>
                                 <div class="td">
-                                    <div class="mileage_k-km" th:text="${T(java.lang.Math).ceil(car.mileage / 1000).intValue()}" contenteditable="true"></div>
+                                    <div class="mileage_k-km" th:if="${T(java.lang.Math).ceil(car.mileage / 1000).intValue() > 0}" th:text="${T(java.lang.Math).ceil(car.mileage / 1000).intValue()}" contenteditable="true"></div>
+                                    <div class="mileage_k-km" th:if="${T(java.lang.Math).ceil(car.mileage / 1000).intValue() <= 0}" th:text="' '" contenteditable="true"></div>
                                     <div class="mileage_k-km-tag">千<span>km</span></div>
                                     <div class="brackets-first">〔</div>
                                     <div class="mileage_km" th:text="${car.mileage}" contenteditable="true"></div>
@@ -221,9 +236,15 @@
                                 <div class="th">修理歴</div>
                                 <div class="td">
                                     <div class="has_repair_history_wrapper">
-                                        <div class="has_repair_history">有</div>
+                                        <div class="ring-wrapper">
+                                            <div class="has_repair_history repair_history" id="repair_history1">有</div>
+                                            <div class="ring"></div>
+                                        </div>
                                         <div class="repair_history_dot">・</div>
-                                        <div class="not_repair_history">無</div>
+                                        <div class="ring-wrapper">
+                                            <div class="not_repair_history repair_history active" id="repair_history2">無</div>
+                                            <div class="ring"></div>
+                                        </div>
                                     </div>
                                     <div class="repair_history-text">有りの場合、車両状態を表示した書面にて、<br>部位・状態をご確認下さい。</div>
                                 </div>
@@ -233,23 +254,41 @@
                                     <p>前使用者の</p>
                                     <p class="has_riamrb-text2">定期点検整備記録簿</p>
                                 </div>
-                                <div class="td">
-                                    <div class="has_riamrb">有</div>
+                                <div class="td before_usage-set">
+                                    <div class="ring-wrapper">
+                                        <div class="has_riamrb before_usage-history" id="before_usage-history1">有</div>
+                                        <div class="before_usage_ring"></div>
+                                    </div>
                                     <div class="brackets-first">〔</div>
-                                    <div class="riamrb_month" contenteditable="true">12</div>
+                                    <div class="riamrb_month" contenteditable="true"></div>
                                     <div class="riamrb_month-tag">ヵ月</div>
                                     <div class="brackets-end">〕</div>
                                     <div class="riamrb_dot">・</div>
-                                    <div class="not_riamrb">無</div>
+                                    <div class="ring-wrapper">
+                                        <div class="not_riamrb before_usage-history" id="before_usage-history2">無</div>
+                                        <div class="before_usage_ring"></div>
+                                    </div>
                                 </div>
                             </div>
                             <div class="tr">
                                 <div class="th">使用歴</div>
-                                <div class="td cars_val">
-                                    <div class="private_car">自家用車</div>
-                                    <div class="business_car">営業車</div>
-                                    <div class="rentalcar">レンタカー</div>
-                                    <div class="other">その他</div>
+                                <div class="td cars_val usage_set">
+                                    <div class="ring-wrapper">
+                                        <div class="private_car usage_history" id="usage_history1">自家用車</div>
+                                        <div class="usage_ring"></div>
+                                    </div>
+                                    <div class="ring-wrapper">
+                                        <div class="business_car usage_history" id="usage_history2">営業車</div>
+                                        <div class="usage_ring"></div>
+                                    </div>
+                                    <div class="ring-wrapper">
+                                        <div class="rentalcar usage_history" id="usage_history3">レンタカー</div>
+                                        <div class="usage_ring"></div>
+                                    </div>
+                                    <div class="ring-wrapper">
+                                        <div class="other usage_history" id="usage_history4">その他</div>
+                                        <div class="usage_ring"></div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -301,7 +340,11 @@
                     pdf.addImage(imgData, 'PNG', marginLeft, marginTop, scaleWidth, scaleHeight); // 画像の位置とサイズを指定
 
                     // PDFをダウンロード
-                    pdf.save('converted.pdf');
+                    const carname = document.getElementById("carname");
+                    const price = document.getElementById("price");
+                    const totalPrice = document.getElementById("totalprice");
+                    const pdfName = carname.textContent + price.textContent + "-" + totalPrice.textContent;
+                    pdf.save(pdfName + '.pdf');
                 }).catch(function(error) {
                     console.error("html2canvasのエラー:", error);
                 });
@@ -316,6 +359,124 @@
             sel.removeAllRanges();
             sel.addRange(range);
            });
+        });
+
+        // プライスの文字を縮小させる
+        document.addEventListener('DOMContentLoaded', function() {
+            const priceEl = document.querySelector('.total-price');
+            const containerEl = document.querySelector('.total-prices_inner');
+
+            function adjustFontSize() {
+                const text = priceEl.textContent.trim();
+                let fontSize;
+                // 入力されたプライスが3桁までだったら350px、4桁以上だったら270
+                if (text.length <= 3) {
+                    // 3桁以下なら350px
+                    fontSize = 350;
+                } else {
+                    // 4桁以上なら例えば270pxにする（好きに調整してOK）
+                    fontSize = 270;
+                }
+                priceEl.style.fontSize = fontSize + 'px';
+            }
+
+            adjustFontSize(); // ページロード時に一回実行
+            priceEl.addEventListener('input', adjustFontSize); // 入力時にも実行
+        });
+
+        //修理歴の「 有・無 」のまる印
+        document.addEventListener("DOMContentLoaded", () => {
+          const wrappers = document.querySelectorAll(".has_repair_history_wrapper");
+
+          wrappers.forEach(wrapper => {
+            const histories = wrapper.querySelectorAll(".repair_history");
+            const rings = wrapper.querySelectorAll(".ring");
+
+            // 初期状態：activeに対応するringを表示
+            histories.forEach((el, index) => {
+              if (el.classList.contains("active")) {
+                rings[index].style.display = "block";
+              } else {
+                rings[index].style.display = "none";
+              }
+            });
+
+            // クリック時の切り替え処理
+            histories.forEach((historyEl, index) => {
+              historyEl.addEventListener("click", () => {
+                // activeクラス切り替え
+                histories.forEach(el => el.classList.remove("active"));
+                historyEl.classList.add("active");
+
+                // ring表示切り替え
+                rings.forEach((ring, i) => {
+                  ring.style.display = (i === index) ? "block" : "none";
+                });
+              });
+            });
+          });
+        });
+
+        //前使用者の「 有・無 」まる印
+        document.addEventListener("DOMContentLoaded", () => {
+          const beforeUsageSets = document.querySelectorAll(".before_usage-set");
+
+          beforeUsageSets.forEach(set => {
+            const histories = set.querySelectorAll(".before_usage-history");
+            const rings = set.querySelectorAll(".before_usage_ring");
+
+            histories.forEach((historyEl, index) => {
+              historyEl.addEventListener("click", () => {
+                // リングの表示切り替え
+                rings.forEach((ringEl, ringIndex) => {
+                  ringEl.style.display = (index === ringIndex) ? "block" : "none";
+                });
+
+                // 選択状態のスタイル切り替え（任意）
+                histories.forEach(el => el.classList.remove("active"));
+                historyEl.classList.add("active");
+              });
+            });
+          });
+        });
+
+
+        //使用歴のまる印
+        const usageHistoriesTest = [
+            document.getElementById("usage_history1"),
+            document.getElementById("usage_history2"),
+            document.getElementById("usage_history3"),
+            document.getElementById("usage_history4")
+        ];
+        const usageHistories = [
+            document.querySelectorAll(".usage_history1"),
+            document.querySelectorAll(".usage_history2"),
+            document.querySelectorAll(".usage_history3"),
+            document.querySelectorAll(".usage_history4")
+        ];
+        const usageRings = document.querySelectorAll(".usage_ring");
+        document.addEventListener("DOMContentLoaded", () => {
+          const usageSets = document.querySelectorAll(".usage_set");
+
+          usageSets.forEach(set => {
+            const histories = set.querySelectorAll(".usage_history");
+            const rings = set.querySelectorAll(".usage_ring");
+
+            histories.forEach((historyEl, index) => {
+              historyEl.addEventListener("click", () => {
+                rings.forEach((ringEl, ringIndex) => {
+                  ringEl.style.display = (index === ringIndex) ? "block" : "none";
+                });
+              });
+            });
+          });
+        });
+
+        // 各 usage_history にクリックイベントを付ける
+        usageHistories.forEach((el, index) => {
+          el.addEventListener("click", () => {
+            updateUsageRing(index);
+          });
         });
 
 

@@ -31,6 +31,11 @@ public enum ErrorKinds {
     GOOGLESPREADSHEET_AUTHORITY_ERROR,
     // ユーザー有無エラー
     EMPLOYEE_NOTFOUND_ERROR,
+    // ファイルサイズエラー
+    FILE_SIZE_ERROR,
+    // ファイルタイプエラー
+    FILE_TYPE_ERROR,
+    //
     // チェックOK
     CHECK_OK,
     // 正常終了

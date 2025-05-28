@@ -9,9 +9,9 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>com.techacademy</groupId>
-    <artifactId>CarPricePro</artifactId>
+    <artifactId>CarPriceProSimple</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>CarPricePro</name>
+    <name>CarPriceProSimple</name>
     <description>the project for tutorial of Develop</description>
     <url/>
     <licenses>
@@ -80,17 +80,6 @@
             <artifactId>google-oauth-client-jetty</artifactId>
             <version>1.34.1</version>
         </dependency>
-        <dependency>
-            <groupId>org.springframework.security</groupId>
-            <artifactId>spring-security-oauth2-client</artifactId>
-            <version>6.4.2</version>
-        </dependency>
-        <!-- Spring Security OAuth2 Jose -->
-        <dependency>
-            <groupId>org.springframework.security</groupId>
-            <artifactId>spring-security-oauth2-jose</artifactId>
-            <version>6.4.2</version>
-        </dependency>
         <!-- https://mvnrepository.com/artifact/com.google.apis/google-api-services-sheets -->
         <dependency>
             <groupId>com.google.apis</groupId>
@@ -150,11 +139,6 @@
             <artifactId>jsoup</artifactId>
             <version>1.10.2</version>
         </dependency>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-security</artifactId>
-        </dependency>
-
         <!-- https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-mail -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
