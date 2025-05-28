@@ -2,6 +2,8 @@ server:
   port: ${PORT:8080}  # Renderで必要（自動割当ポートに対応）
 
 spring:
+  autoconfigure:
+      exclude: org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration
   thymeleaf:
     prefix: classpath:/templates/
     suffix: .html
