@@ -150,17 +150,17 @@ public class CarsController {
     }
 
     // 車両詳細画面表示
-    @GetMapping(value = "/{id}")
-    public String detail(@PathVariable Integer id, Model model) {
-
-        Car car = carService.findById(id);
-        boolean viExits = String.valueOf(car.getViYear()) == null ? false : true;
-
-        model.addAttribute("viExits", viExits);
-        model.addAttribute("car", car);
-
-        return "cars/detail";
-    }
+//    @GetMapping(value = "/{id}")
+//    public String detail(@PathVariable Integer id, Model model) {
+//
+////        Car car = carService.findById(id);
+//        boolean viExits = String.valueOf(car.getViYear()) == null ? false : true;
+//
+//        model.addAttribute("viExits", viExits);
+//        model.addAttribute("car", car);
+//
+//        return "cars/detail";
+//    }
 
     // 車両新規登録
     @GetMapping(value = "/add")
