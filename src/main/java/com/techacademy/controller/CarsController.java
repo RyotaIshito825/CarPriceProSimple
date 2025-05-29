@@ -170,7 +170,7 @@ public class CarsController {
 
     // 車両新規登録処理
     @SuppressWarnings("unchecked")
-    @GetMapping(value = "/add/submit")
+    @PostMapping(value = "/add/submit")
     public String add(@Validated Car car, BindingResult res, Model model, HttpSession session) {
 
         try {
