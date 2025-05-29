@@ -9,6 +9,6 @@ public class TopController {
 
     @GetMapping(value = "/")
     public String index() {
-        return "top";
+        return "cars/top";
     }
 }
