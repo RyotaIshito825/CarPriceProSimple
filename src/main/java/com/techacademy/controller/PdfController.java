@@ -7,6 +7,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -35,7 +36,7 @@ public class PdfController {
         this.carService = carService;
     }
 
-    @PostMapping("/generate-pdf")
+    @GetMapping("/generate-pdf")
 //    public String generatePdf(HttpServletRequest req, String priceCardName, Integer id, Model model) {
     public String generatePdf(HttpServletRequest req, String priceCardName, @ModelAttribute Car oneCar, HttpSession session, Model model) {
 
@@ -83,7 +84,7 @@ public class PdfController {
     }
 
     @SuppressWarnings("unchecked")
-    @PostMapping("/generate-pdfs")
+    @GetMapping("/generate-pdfs")
     public String generatePdfLists(@RequestParam(required = false) List<String> id,
             @RequestParam String option,
             HttpServletRequest req, String priceCardName, Model model, HttpSession session) {

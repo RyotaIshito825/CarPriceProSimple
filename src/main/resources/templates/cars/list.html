@@ -58,7 +58,7 @@
                         </form>
                     </div>
 
-                    <form th:action="@{/generate-pdfs}" method="post" class="car_list-selected-pricecards">
+                    <form th:action="@{/generate-pdfs}" method="get" class="car_list-selected-pricecards">
                         <div class="car_list-selected-pricecards">
                             <div class="car_list-selected-pricecard-wrapper" style="width: 160px;">
                                 <label for="" class="car_list-selected-pricecard-label">選択テンプレート</label>
@@ -99,7 +99,7 @@
                     </div>
 
                     <div class="cars_tables-tbody" th:each="car, stat : ${page.content}">
-                        <form th:action="@{/generate-pdf}" method="post" class="cars_tables-tbody_item">
+                        <form th:action="@{/generate-pdf}" method="get" class="cars_tables-tbody_item">
                             <div class="cars_tables-tbody-checkboxes">
                                 <input type="checkbox" class="cars_tables-tbody-checkbox" th:value="${car.id}" name="carId">
                             </div>

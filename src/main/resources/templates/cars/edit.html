@@ -13,7 +13,7 @@
                 <div class="content-mains_inner">
                     <div class="page_title">車両情報更新</div>
 
-                    <form th:action="@{/cars/update(index=${index})}" method="post" class="car_edits_form">
+                    <form th:action="@{/cars/update(index=${index})/submit}" method="get" class="car_edits_form">
                         <div class="car_edits" th:object="${car}">
                             <div class="car_edits_tables">
                                 <div class="car_edits_tables-tr">

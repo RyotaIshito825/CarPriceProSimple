@@ -229,7 +229,7 @@ public class CarsController {
 
     // 車両更新処理
     @SuppressWarnings("unchecked")
-    @PostMapping(value = "/update")
+    @GetMapping(value = "/update/submit")
     public String update(@Validated Car car, int index, BindingResult res, Model model, HttpSession session) {
         List<Car> carList = (List<Car>) session.getAttribute("carList");
         if (carList == null || index < 0 || index >= carList.size()) {
@@ -374,7 +374,7 @@ public class CarsController {
         return "/cars/shop_registration";
     }
 
-    @PostMapping(value = "/shop")
+    @GetMapping(value = "/shop/submit")
     public String shopRegi(@RequestParam MultipartFile file, @RequestParam String shopName, HttpSession session, Model model) throws IOException {
 
         if (!file.isEmpty()) {
