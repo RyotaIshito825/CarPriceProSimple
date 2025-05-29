@@ -170,7 +170,7 @@ public class CarsController {
 
     // 車両新規登録処理
     @SuppressWarnings("unchecked")
-    @PostMapping(value = "/add")
+    @GetMapping(value = "/add/submit")
     public String add(@Validated Car car, BindingResult res, Model model, HttpSession session) {
 
         try {
@@ -260,7 +260,7 @@ public class CarsController {
         return "cars/template";
     }
     // テンプレート
-    @PostMapping(value = "/template")
+    @GetMapping(value = "/template/submit")
     public String confirmedTemplate(@RequestParam String priceCardName, HttpSession session) {
 
         PriceCard priceCard = new PriceCard();
