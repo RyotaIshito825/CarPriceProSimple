@@ -278,7 +278,7 @@ public class CarsController {
 
     // データ取込処理
     @SuppressWarnings("unchecked")
-    @GetMapping(value = "/intake")
+    @GetMapping(value = "/intake/submit")
     public String regi(String url, MultipartFile file, Model model, HttpSession session) throws IOException, GeneralSecurityException {
 
         if (file != null && !file.isEmpty()) {
