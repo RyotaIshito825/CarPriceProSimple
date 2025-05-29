@@ -229,7 +229,7 @@ public class CarsController {
 
     // 車両更新処理
     @SuppressWarnings("unchecked")
-    @GetMapping(value = "/update/submit")
+    @PostMapping(value = "/update/submit")
     public String update(@Validated Car car, int index, BindingResult res, Model model, HttpSession session) {
         List<Car> carList = (List<Car>) session.getAttribute("carList");
         if (carList == null || index < 0 || index >= carList.size()) {
