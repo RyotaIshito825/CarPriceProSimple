@@ -361,17 +361,17 @@ public class CarsController {
         } catch (GoogleJsonResponseException e) { // スプレッドシートの権限エラー処理
 
             model.addAttribute("error", ErrorMessage.getErrorValue(ErrorKinds.GOOGLESPREADSHEET_AUTHORITY_ERROR));
-            return "/cars/intake";
+            return "cars/intake";
         } catch (ArrayIndexOutOfBoundsException e) {
-            return "/cars/intake";
+            return "cars/intake";
         } catch (NumberFormatException e) {
-            return "/cars/intake";
+            return "cars/intake";
         }
     }
 
     @GetMapping(value = "/shop")
     public String shop() {
-        return "/cars/shop_registration";
+        return "cars/shop_registration";
     }
 
     @GetMapping(value = "/shop/submit")

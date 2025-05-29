@@ -80,7 +80,7 @@ public class PdfController {
             model.addAttribute("with", true);
             model.addAttribute("none", false);
         }
-        return "/pricecards/pricecard" + priceCardNum;
+        return "pricecards/pricecard" + priceCardNum;
     }
 
     @SuppressWarnings("unchecked")
@@ -151,7 +151,7 @@ public class PdfController {
 
             session.setAttribute("carList", carList);
 
-            return "/pricecards/pricecard" + priceCardNum;
+            return "pricecards/pricecard" + priceCardNum;
         } else {
             return "redirect:/cars/list";
         }
