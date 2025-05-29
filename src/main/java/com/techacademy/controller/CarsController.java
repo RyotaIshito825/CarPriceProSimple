@@ -61,7 +61,7 @@ import com.techacademy.service.PriceCardService;
 import jakarta.servlet.http.HttpSession;
 
 @Controller
-@RequestMapping("cars")
+@RequestMapping("/cars")
 public class CarsController {
 
     private final CarService carService;
@@ -374,7 +374,7 @@ public class CarsController {
         return "cars/shop_registration";
     }
 
-    @GetMapping(value = "/shop/submit")
+    @PostMapping(value = "/shop/submit")
     public String shopRegi(@RequestParam MultipartFile file, @RequestParam String shopName, HttpSession session, Model model) throws IOException {
 
         if (!file.isEmpty()) {
