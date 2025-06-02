@@ -283,15 +283,15 @@ public class CarsController {
 
         if (file != null && !file.isEmpty()) {
             registerExcelFileDataVehicle(file, session);
-            if (url.isEmpty()) {
-                return "redirect:/cars/list";
-            }
+//            if (url.isEmpty()) {
+//                return "redirect:/cars/list";
+//            }
         }
 
         try {
-            if (url.isEmpty()) {
-                return "redirect:/cars/intake";
-            }
+//            if (url.isEmpty()) {
+//                return "redirect:/cars/intake";
+//            }
 
             String spreadSheetId = getSpreadSheetId(url);
             String spreadSheetGid = getSpreadSheetGid(url);
@@ -471,8 +471,6 @@ public class CarsController {
     @SuppressWarnings("unchecked")
     public void registerExcelFileDataVehicle(MultipartFile file, HttpSession session) throws IOException {
         try {
-
-
             byte[] bytes = file.getBytes();
             ByteArrayInputStream inputStream = new ByteArrayInputStream(bytes);
 
