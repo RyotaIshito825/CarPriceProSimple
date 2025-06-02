@@ -455,16 +455,34 @@ public class CarsController {
 
     // Sheetsインスタンスの取得
     public static Sheets getSpreadsheets() throws IOException, GeneralSecurityException {
-        InputStream input = new FileInputStream("src/main/resources/plated-course-424107-c4-ae0a645e74f3.json");
-        GoogleCredentials credential = ServiceAccountCredentials.fromStream(input)
+        // 環境変数からBase64文字列を取得
+        String base64Json = System.getenv("GOOGLE_CREDENTIALS_BASE64");
+
+        if (base64Json == null || base64Json.isEmpty()) {
+            throw new IllegalStateException("環境変数 GOOGLE_CREDENTIALS_BASE64 が設定されていません。");
+        }
+
+        byte[] decodedJson = Base64.getDecoder().decode(base64Json);
+        GoogleCredentials credential = GoogleCredentials.fromStream(new ByteArrayInputStream(decodedJson))
                 .createScoped(Arrays.asList(SheetsScopes.SPREADSHEETS));
 
         HttpTransport transport = GoogleNetHttpTransport.newTrustedTransport();
         JsonFactory jsonFactory = GsonFactory.getDefaultInstance();
         HttpRequestInitializer httpRequestInitializer = new HttpCredentialsAdapter(credential);
 
-        Sheets service = new Sheets.Builder(transport, jsonFactory, httpRequestInitializer).build();
-        return service;
+        return new Sheets.Builder(transport, jsonFactory, httpRequestInitializer)
+                .setApplicationName("CarPricePro") // ← 任意のアプリ名でOK
+                .build();
+//        InputStream input = new FileInputStream("src/main/resources/plated-course-424107-c4-ae0a645e74f3.json");
+//        GoogleCredentials credential = ServiceAccountCredentials.fromStream(input)
+//                .createScoped(Arrays.asList(SheetsScopes.SPREADSHEETS));
+//
+//        HttpTransport transport = GoogleNetHttpTransport.newTrustedTransport();
+//        JsonFactory jsonFactory = GsonFactory.getDefaultInstance();
+//        HttpRequestInitializer httpRequestInitializer = new HttpCredentialsAdapter(credential);
+//
+//        Sheets service = new Sheets.Builder(transport, jsonFactory, httpRequestInitializer).build();
+//        return service;
     }
 
     // fileから車両を登録する
