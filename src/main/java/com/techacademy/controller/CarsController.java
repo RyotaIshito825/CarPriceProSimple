@@ -283,15 +283,15 @@ public class CarsController {
 
         if (file != null && !file.isEmpty()) {
             registerExcelFileDataVehicle(file, session);
-//            if (url.isEmpty()) {
-//                return "redirect:/cars/list";
-//            }
+            if (url.isEmpty()) {
+                return "redirect:/cars/list";
+            }
         }
 
         try {
-//            if (url.isEmpty()) {
-//                return "redirect:/cars/intake";
-//            }
+            if (url.isEmpty()) {
+                return "redirect:/cars/intake";
+            }
 
             String spreadSheetId = getSpreadSheetId(url);
             String spreadSheetGid = getSpreadSheetGid(url);
