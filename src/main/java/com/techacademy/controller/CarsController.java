@@ -591,13 +591,14 @@ public class CarsController {
                     car.setCalcPriceOfDpf(calcPriceOfDpf);
                     car.setMileage((int) Double.parseDouble(String.valueOf(row.getCell(14))));
 
-                    ErrorKinds result = carService.createCar(car);
+//                    ErrorKinds result = carService.createCar(car);
                     carList.add(car);
                 }
             }
             session.setAttribute("carList", carList);
         } catch (Exception e) {
-            return;
+            e.printStackTrace();
+            throw e;
         }
     }
 
