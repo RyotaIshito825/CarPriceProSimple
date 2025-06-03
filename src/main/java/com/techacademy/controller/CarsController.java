@@ -278,11 +278,15 @@ public class CarsController {
 
     // データ取込処理
     @SuppressWarnings("unchecked")
-    @GetMapping(value = "/intake/submit")
+    @PostMapping(value = "/intake/submit")
     public String regi(String url, MultipartFile file, Model model, HttpSession session) throws IOException, GeneralSecurityException {
 
+        System.out.println("tedst");
+
         if (file != null && !file.isEmpty()) {
+            System.out.println("tedst2");
             registerExcelFileDataVehicle(file, session);
+            System.out.println("test");
             if (url.isEmpty()) {
                 return "redirect:/cars/list";
             }
