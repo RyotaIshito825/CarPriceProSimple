@@ -290,7 +290,7 @@ public class CarsController {
 
         try {
             if (url.isEmpty()) {
-                return "redirect:/cars/intake";
+                return "redirect:/cars/list";
             }
 
             String spreadSheetId = getSpreadSheetId(url);
